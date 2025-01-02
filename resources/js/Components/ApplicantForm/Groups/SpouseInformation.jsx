@@ -67,7 +67,6 @@ function Component({
                             <TextField
                                 fullWidth
                                 label={label}
-                                autoComplete="off"
                                 onChange={handleOnChange(key)}
                             />
                         </Grid>

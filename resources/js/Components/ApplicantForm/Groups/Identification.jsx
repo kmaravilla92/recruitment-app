@@ -22,7 +22,9 @@ const fields = labelsToFieldConfig([
 ])
 
 function Component({
-    setData
+    setData,
+    errors,
+    clearErrors
 }) {
     function handleOnChange(key, e) {
         setData(data => {
@@ -53,8 +55,10 @@ function Component({
                             <TextField
                                 fullWidth
                                 label={label}
-                                autoComplete="off"
+                                error={errors[key] && errors[key].length > 0}
                                 onChange={handleOnChange.bind(null, key)}
+                                onKeyUp={clearErrors.bind(null, key)}
+                                helperText={errors[key] || ""}
                             />
                         </Grid>
                     );

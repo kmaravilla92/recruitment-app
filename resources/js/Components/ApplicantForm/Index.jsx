@@ -5,13 +5,15 @@ import {
 
 import {
     useForm,
-    router
+    router,
+    usePage
 } from '@inertiajs/react';
 
 import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
+    Box,
     Typography,
     Stack
 } from '@mui/material';
@@ -85,9 +87,14 @@ export default function ApplicantForm({
         post,
         processing,
         errors,
+        clearErrors
     } = useForm(defaultFormFields)
 
     const curStep = +step
+
+    useEffect(() => {
+        console.log({ errors })
+    }, [errors])
 
     function handlePrev() {
         router.get(
@@ -96,7 +103,7 @@ export default function ApplicantForm({
     }
 
     function handleNext() {
-        console.log({ data }, data[step])
+        console.log({ data })
         post(route('applicants.register.post', [step]))
     }
 
@@ -114,7 +121,12 @@ export default function ApplicantForm({
             >
                 Applicant Registration Form
             </Typography>
-            <form onSubmit={handleSubmit}>
+            <Box
+                component="form"
+                noValidate
+                autoComplete="off"
+                onSubmit={handleSubmit}
+            >
                 {items.map(({
                     label,
                     component: {
@@ -146,6 +158,8 @@ export default function ApplicantForm({
                                 <Component
                                     data={data}
                                     setData={setData}
+                                    errors={errors}
+                                    clearErrors={clearErrors}
                                 />
                                 <Stack
                                     direction="row"
@@ -178,7 +192,7 @@ export default function ApplicantForm({
                 >
                     Submit
                 </ButtonRow>
-            </form>
+            </Box>
         </>
     );
 }

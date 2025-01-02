@@ -90,7 +90,6 @@ function ContactRow({
                             <TextField
                                 fullWidth
                                 label={label}
-                                autoComplete="off"
                                 onChange={handleOnChange.bind(this, key)}
                             />
                         </Grid>

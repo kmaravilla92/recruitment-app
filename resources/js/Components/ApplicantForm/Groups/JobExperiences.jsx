@@ -78,7 +78,6 @@ const ExperienceRow = ({
                             <TextField
                                 fullWidth
                                 label={label}
-                                autoComplete="off"
                                 onChange={handleOnChange(key)}
                             />
                         </Grid>

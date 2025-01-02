@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Requests\StoreApplicationRequest;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -37,7 +38,7 @@ Route::get('/applicants/register/{step?}', function ($step = 1) {
     ]);
 })->name('applicants.register.show');
 
-Route::post('/applicants/register/{step?}', function ($step = 1) {
+Route::post('/applicants/register/{step?}', function (StoreApplicationRequest $request, $step = 1) {
     $cur_step = $step + 1;
     return to_route('applicants.register.show', ['step' => $cur_step]);
 })->name('applicants.register.post');
