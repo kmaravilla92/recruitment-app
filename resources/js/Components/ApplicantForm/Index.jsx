@@ -92,10 +92,6 @@ export default function ApplicantForm({
 
     const curStep = +step
 
-    useEffect(() => {
-        console.log({ errors })
-    }, [errors])
-
     function handlePrev() {
         router.get(
             route('applicants.register.show', [step - 1])
@@ -103,7 +99,6 @@ export default function ApplicantForm({
     }
 
     function handleNext() {
-        console.log({ data })
         post(route('applicants.register.post', [step]))
     }
 

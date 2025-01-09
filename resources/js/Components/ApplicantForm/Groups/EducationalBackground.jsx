@@ -21,10 +21,10 @@ import {
 const step = 7
 
 const types = [
-    'Primary',
-    'Secondary',
-    'Vocational',
     'Tertiary',
+    'Vocational',
+    'Secondary',
+    'Primary',
 ]
 
 const rowFields = labelsToFieldConfig([
@@ -55,7 +55,9 @@ const fields = [
 
 const TypeRow = ({
     type,
-    onChange
+    onChange,
+    errors,
+    clearErrors
 }) => {
     const {
         data,
@@ -91,6 +93,7 @@ const TypeRow = ({
                     key,
                     label
                 }) => {
+                    const errorKey = `${type.toLowerCase()}.${key}`;
                     return (
                         <Grid
                             size={{
@@ -103,7 +106,10 @@ const TypeRow = ({
                             <TextField
                                 fullWidth
                                 label={label}
-                                onChange={handleOnChange.bind(this, key)}
+                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                onChange={handleOnChange.bind(null, key)}
+                                onKeyUp={clearErrors.bind(null, errorKey)}
+                                helperText={errors[errorKey] || ""}
                             />
                         </Grid>
                     )
@@ -114,7 +120,9 @@ const TypeRow = ({
 }
 
 function Component({
-    setData
+    setData,
+    errors,
+    clearErrors
 }) {
     function handleOnChange(type, educData) {
         setData(data => {
@@ -128,11 +136,14 @@ function Component({
             spacing={2}
         >
             {types.map(type => {
+ 
                 return (
                     <TypeRow
-                        key={type}
+                        key={type.toLowerCase()}
                         type={type}
+                        errors={errors}
                         onChange={handleOnChange}
+                        clearErrors={clearErrors}
                     />
                 )
             })}

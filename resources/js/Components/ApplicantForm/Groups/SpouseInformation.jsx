@@ -34,7 +34,9 @@ const fields = [
 ]
 
 function Component({
-    setData
+    setData,
+    errors,
+    clearErrors
 }) {
     function handleOnChange(key) {
         return function (e) {
@@ -67,7 +69,10 @@ function Component({
                             <TextField
                                 fullWidth
                                 label={label}
-                                onChange={handleOnChange(key)}
+                                error={errors[key] && errors[key].length > 0}
+                                onChange={handleOnChange.bind(null, key)}
+                                onKeyUp={clearErrors.bind(null, key)}
+                                helperText={errors[key] || ""}
                             />
                         </Grid>
                     );

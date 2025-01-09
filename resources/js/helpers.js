@@ -1,5 +1,5 @@
 export function toSnakeCase(str) {
-    return str.replace(/[^A-Za-z]+/g, '_').toLowerCase();
+    return str.replace(/[^A-Za-z0-9]+/g, ' ').toLowerCase().trim().replaceAll(' ', '_');
 }
 
 export function labelsToFieldConfig(labels) {

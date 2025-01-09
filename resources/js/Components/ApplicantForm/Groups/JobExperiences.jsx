@@ -40,7 +40,9 @@ const fields = [
 const ExperienceRow = ({
     i,
     row,
-    onChange
+    onChange,
+    errors,
+    clearErrors
 }) => {
     function handleOnChange(key) {
         return function (e) {
@@ -66,6 +68,7 @@ const ExperienceRow = ({
                     key,
                     label,
                 }) => {
+                    const errorKey = `${i}.${key}`
                     return (
                         <Grid
                             size={{
@@ -78,7 +81,10 @@ const ExperienceRow = ({
                             <TextField
                                 fullWidth
                                 label={label}
-                                onChange={handleOnChange(key)}
+                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                onChange={handleOnChange.bind(null, key)}
+                                onKeyUp={clearErrors.bind(null, errorKey)}
+                                helperText={errors[errorKey] || ""}
                             />
                         </Grid>
                     );
@@ -90,6 +96,8 @@ const ExperienceRow = ({
 
 function Component({
     setData,
+    errors,
+    clearErrors
 }) {
     const [rows, setRows] = useState(defaultFormFields);
 
@@ -128,7 +136,9 @@ function Component({
                         key={i}
                         row={row}
                         i={i}
+                        errors={errors}
                         onChange={handleOnChange(i)}
+                        clearErrors={clearErrors}
                     />
                 )
             })}

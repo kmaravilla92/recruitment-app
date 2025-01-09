@@ -50,7 +50,9 @@ const fields = [
 
 const ParentRow = ({
     type,
-    onChange
+    onChange,
+    errors,
+    clearErrors
 }) => {
     const {
         data,
@@ -84,6 +86,7 @@ const ParentRow = ({
                     key,
                     label
                 }) => {
+                    const errorKey = `${type.toLowerCase()}.${key}`
                     return (
                         <Grid
                             size={{
@@ -96,7 +99,10 @@ const ParentRow = ({
                             <TextField
                                 fullWidth
                                 label={label}
-                                onChange={handleOnChange.bind(this, key)}
+                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                onChange={handleOnChange.bind(null, key)}
+                                onKeyUp={clearErrors.bind(null, errorKey)}
+                                helperText={errors[errorKey] || ""}
                             />
                         </Grid>
                     )
@@ -107,7 +113,9 @@ const ParentRow = ({
 }
 
 function Component({
-    setData
+    setData,
+    errors,
+    clearErrors
 }) {
     function handleOnChange(type, parentData) {
         setData(data => {
@@ -123,7 +131,9 @@ function Component({
                     <ParentRow
                         key={type}
                         type={type}
+                        errors={errors}
                         onChange={handleOnChange.bind(this, type.toLowerCase())}
+                        clearErrors={clearErrors}
                     />
                 )
             })}

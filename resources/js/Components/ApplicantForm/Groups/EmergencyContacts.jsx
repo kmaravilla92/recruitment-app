@@ -42,7 +42,9 @@ const fields = [
 
 function ContactRow({
     i,
-    onChange
+    onChange,
+    errors,
+    clearErrors
 }) {
     const {
         data,
@@ -78,6 +80,7 @@ function ContactRow({
                     key,
                     label
                 }) => {
+                    const errorKey = `${i}.${key}`;
                     return (
                         <Grid
                             size={{
@@ -90,7 +93,10 @@ function ContactRow({
                             <TextField
                                 fullWidth
                                 label={label}
-                                onChange={handleOnChange.bind(this, key)}
+                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                onChange={handleOnChange.bind(null, key)}
+                                onKeyUp={clearErrors.bind(null, errorKey)}
+                                helperText={errors[errorKey] || ""}
                             />
                         </Grid>
                     )
@@ -101,7 +107,9 @@ function ContactRow({
 }
 
 function Component({
-    setData
+    setData,
+    errors,
+    clearErrors
 }) {
     const [rows, setRows] = useState(defaultFormFields);
     
@@ -128,7 +136,9 @@ function Component({
                     <ContactRow
                         key={i}
                         i={i}
+                        errors={errors}
                         onChange={handleOnChange.bind(this, i)}
+                        clearErrors={clearErrors}
                     />
                 )
             })}

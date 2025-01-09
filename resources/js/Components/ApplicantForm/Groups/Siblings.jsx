@@ -44,7 +44,9 @@ const fields = [
 
 function SiblingRow({
     i,
-    onChange
+    onChange,
+    errors,
+    clearErrors
 }) {
     const {
         data,
@@ -80,6 +82,7 @@ function SiblingRow({
                     key,
                     label
                 }) => {
+                    const errorKey = `${i}.${key}`
                     return (
                         <Grid
                             size={{
@@ -92,7 +95,10 @@ function SiblingRow({
                             <TextField
                                 fullWidth
                                 label={label}
-                                onChange={handleOnChange.bind(this, key)}
+                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                onChange={handleOnChange.bind(null, key)}
+                                onKeyUp={clearErrors.bind(null, errorKey)}
+                                helperText={errors[errorKey] || ""}
                             />
                         </Grid>
                     )
@@ -103,7 +109,9 @@ function SiblingRow({
 }
 
 function Component({
-    setData
+    setData,
+    errors,
+    clearErrors
 }) {
     const [rows, setRows] = useState(defaultFormFields);
     
@@ -130,7 +138,9 @@ function Component({
                     <SiblingRow
                         key={i}
                         i={i}
+                        errors={errors}
                         onChange={handleOnChange.bind(this, i)}
+                        clearErrors={clearErrors}
                     />
                 )
             })}

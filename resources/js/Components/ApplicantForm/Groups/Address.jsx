@@ -30,7 +30,9 @@ function fields(namespace) {
 
 function Component(namespace, step) {
     return function ({
-        setData
+        setData,
+        errors,
+        clearErrors
     }) {
         function handleOnChange(key, e) {
             setData(data => {
@@ -58,7 +60,10 @@ function Component(namespace, step) {
                                 <TextField
                                     fullWidth
                                     label={label}
-                                    onChange={handleOnChange.bind(this, key)}
+                                    error={errors[key] && errors[key].length > 0}
+                                    onChange={handleOnChange.bind(null, key)}
+                                    onKeyUp={clearErrors.bind(null, key)}
+                                    helperText={errors[key] || ""}
                                 />
                             </Grid>
                         )

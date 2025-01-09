@@ -23,24 +23,169 @@ class StoreApplicationRequest extends FormRequest
     {
         $step = $this->route('step');
 
-        $rules = [
-            '1' => [
-                'first_name' => 'required',
-                'middle_name' => 'required',
-                'last_name' => 'required',
-                'tin_number' => 'required',
-                'sss_number' => 'required',
-                'hdmf_number' => 'required',
-                'philhealth_number' => 'required',
-                'license_sbr_number' => 'required',
-                'lesp_expiry_date' => 'required',
-            ],
-            '2' => [
-                'first_name' => 'required',
-            ],
+        $address_rules = [
+            'house_number',
+            'street',
+            'barangay',
+            'city',
+            'province',
+            'region',
         ];
 
-        return $rules[$step];
+        $educational_background_rules = [
+            'educational_status',
+            'school',
+            'period_covered',
+            'degree_course',
+        ];
+
+        $emergency_contact_rules = [
+            'name',
+            'address',
+            'relation',
+            'contact_number',
+        ];
+
+        $default_human_info_rules = [
+            'full_name',
+            'birthday',
+        ];
+
+        $default_working_human_info_rules = [
+            ...$default_human_info_rules,
+            ...['occupation',],
+        ];
+
+        $default_non_working_human_info_rules = [
+            ...$default_human_info_rules,
+            ...['contact_number',],
+        ];
+
+        $parent_rules = $default_working_human_info_rules;
+
+        $sibling_rules = $default_non_working_human_info_rules;
+
+        $spouse_rules = $default_working_human_info_rules;
+
+        $child_rules = $default_non_working_human_info_rules;
+
+        $job_rules = [
+            'company',
+            'employment_period',
+            'reason_for_leaving',
+            'position',
+        ];
+
+        $training_rules = [
+            'trainings_seminars',
+            'duration',
+            'total_hours',
+            'venue',
+            'facilitator',
+        ];
+
+        $character_reference_rules = [
+            'full_name',
+            'occupation',
+            'company',
+            'address',
+        ];
+
+        $rules_groups = [
+            // Identification
+            1 => [
+                'first_name',
+                'middle_name',
+                'last_name',
+                'tin_number',
+                'sss_number',
+                'hdmf_number',
+                'philhealth_number',
+                'license_sbr_number',
+                'lesp_expiry_date',
+            ],
+            // Personal Data
+            2 => [
+                'contact_number',
+                'email_address',
+                'date_of_birth',
+                'place_of_birth',
+                'height',
+                'weight',
+                'gender',
+                'religion',
+                'fully_vaccinated',
+                'citizenship',
+                'blood_type',
+                'hair_color',
+                'driver_license_number',
+                'distinguishing_mark',
+            ],
+            // Present Address
+            3 => $address_rules,
+            // Home Address
+            4 => $address_rules,
+            // Provincial Address
+            5 => $address_rules,
+            // Uniform Detail
+            6 => [
+                'shoe_size',
+                'waistline',
+                'polo_shirt_size',
+                'city',
+                'pershing_cap_size',
+                'type_a_uniform_size',
+            ],
+            // Educational Background
+            7 => [
+                'primary' => $educational_background_rules,
+                'secondary' => $educational_background_rules,
+                'vocational' => $educational_background_rules,
+                'tertiary' => $educational_background_rules,
+            ],
+            // Emergency Contacts
+            8 => $emergency_contact_rules,
+            9 => [
+                'father' => $parent_rules,
+                'mother' => $parent_rules,
+            ],
+            10 => $sibling_rules,
+            // // Spouse Information
+            11 => $spouse_rules,
+            // // Children Information
+            12 => $child_rules,
+            // // Job Experiences
+            13 => $job_rules,
+            // // Trainings
+            14 => $training_rules,
+            15 => $character_reference_rules,
+        ];
+
+        // Add default required to all
+        foreach ($rules_groups as $rules_step => $rules) {
+            if (in_array($rules_step, [7, 9])) {
+                foreach ($rules as $group_key => $group_rules) {
+                    foreach ($group_rules as $j => $field_key) {
+                        $rules_groups[$rules_step][$group_key . '.' . $field_key] = 'required';
+                        unset($rules_groups[$rules_step][$group_key]);
+                    }
+                }
+            } else if (in_array($rules_step, [8, 10, 12, 13, 14, 15])) {
+                foreach ($this->input() as $i => $values) {
+                    foreach ($rules as $j => $field_key) {
+                        $rules_groups[$rules_step][$i . '.' . $field_key] = 'required';
+                        unset($rules_groups[$rules_step][$j]);
+                    }
+                }
+            } else {
+                foreach ($rules as $i => $field_key) {
+                    $rules_groups[$rules_step][$field_key] = 'required';
+                    unset($rules_groups[$rules_step][$i]);
+                }
+            }
+        }
+
+        return $rules_groups[$step];
     }
 
     public function attributes(): array
@@ -52,6 +197,7 @@ class StoreApplicationRequest extends FormRequest
             $new_key = str_replace($step . '.', '', $key);
             $attributes[$new_key] = $new_key;
         }
+
         return $attributes;
     }
 
@@ -64,16 +210,20 @@ class StoreApplicationRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $input = $this->input($this->route('step'));
-        $this->replace($input);
-    }
-
-    protected function applyStep(int $step = 1, $step_rules = []): array
-    {
-        $new_step_rules = [];
-        foreach ($step_rules as $key => $rules) {
-            $new_step_rules[$step . '.' . $key] = $rules;
+        $step = $this->route('step');
+        $input = $this->input();
+        if (in_array($step, [8, 10, 12, 13, 14, 15])) {
+            $map = [
+                8 => 'emergency_contact_list',
+                10 => 'sibling_detail_list',
+                12 => 'child_detail_list',
+                13 => 'job_experience_list',
+                14 => 'training_detail_list',
+                15 => 'character_reference_list',
+            ];
+            $this->replace($this->input($step . '.' . $map[$step]));
+        } else {
+            $this->replace($this->input($step));
         }
-        return $new_step_rules;
     }
 }
