@@ -22,6 +22,7 @@ const fields = labelsToFieldConfig([
 ])
 
 function Component({
+    data,
     setData,
     errors,
     clearErrors
@@ -55,7 +56,9 @@ function Component({
                             <TextField
                                 fullWidth
                                 label={label}
-                                error={errors[key] && errors[key].length > 0}
+                                defaultValue={data?.[key] || ""}
+                                variant="filled"
+                                error={errors?.[key]?.length  > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors.bind(null, key)}
                                 helperText={errors[key] || ""}

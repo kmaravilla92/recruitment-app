@@ -10,8 +10,9 @@ import {
 import App from '@/Layouts/App';
 import ApplicantForm from '@/Components/ApplicantForm/Index';
 
-export default function Register({
-    step
+export default function Form({
+    step,
+    savedData,
 }) {
     return (
         <>
@@ -29,7 +30,8 @@ export default function Register({
                         maxWidth="xl"
                     >
                         <ApplicantForm
-                            step={step}
+                            step={+step}
+                            savedData={savedData}
                         />
                     </Container>
                 </Box>

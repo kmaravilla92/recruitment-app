@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import {
     useState,
     useEffect,
@@ -36,28 +38,35 @@ const rowFields = labelsToFieldConfig([
 const defaultFormField = fieldsToFormObject(rowFields)
 const defaultFormFields = Array(4).fill(defaultFormField)
 
+const fieldKey = 'training_detail_list'
+
 const fields = [
     {
         label: 'Trainings',
-        key: 'training_detail_list',
+        key: fieldKey,
         defaultValue: defaultFormFields,
     }
 ]
 
 function TrainingRow({
-    i,
-    onChange,
+    index,
+    data,
     errors,
-    clearErrors
+    onChange,
+    clearErrors,
 }) {
     const {
-        data,
+        data: rowData,
         setData
-    } = useForm(defaultFormField);
+    } = useForm(_.merge(
+        {},
+        defaultFormField,
+        data
+    ));
 
     useEffect(() => {
-        onChange(data)
-    }, [data])
+        onChange(rowData)
+    }, [rowData])
 
     function handleOnChange(key, e) {
         setData(key, e.target.value)
@@ -71,7 +80,7 @@ function TrainingRow({
                 }}
                 variant="h6"
             >
-                Training {i + 1}
+                Training {index + 1}
             </Typography>
             <Grid
                 sx={{
@@ -84,7 +93,7 @@ function TrainingRow({
                     key,
                     label
                 }) => {
-                    const errorKey = `${i}.${key}`
+                    const errorKey = `${index}.${key}`
                     return (
                         <Grid
                             size={{
@@ -97,7 +106,9 @@ function TrainingRow({
                             <TextField
                                 fullWidth
                                 label={label}
-                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                defaultValue={data?.[key] || ""}
+                                variant="filled"
+                                error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors.bind(null, errorKey)}
                                 helperText={errors[errorKey] || ""}
@@ -111,11 +122,12 @@ function TrainingRow({
 }
 
 function Component({
+    data,
     setData,
     errors,
     clearErrors
 }) {
-    const [rows, setRows] = useState(defaultFormFields);
+    const [rows, setRows] = useState(defaultFormFields)
     
     function handleClick() {
         setRows(rows => {
@@ -126,22 +138,23 @@ function Component({
         })
     }
 
-    function handleOnChange(i, newData) {
+    function handleOnChange(index, newData) {
         setData(data => {
-            data[step].training_detail_list[i] = newData
+            data[step][fieldKey][index] = newData
             return data
         })
     }
 
     return (
         <>
-            {rows.map((row, i) => {
+            {rows.map((row, index) => {
                 return (
                     <TrainingRow
-                        key={i}
-                        i={i}
+                        key={index}
+                        index={index}
+                        data={data?.[fieldKey]?.[index] || {}}
                         errors={errors}
-                        onChange={handleOnChange.bind(this, i)}
+                        onChange={handleOnChange.bind(this, index)}
                         clearErrors={clearErrors}
                     />
                 )

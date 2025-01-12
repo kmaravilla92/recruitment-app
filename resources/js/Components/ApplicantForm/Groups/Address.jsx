@@ -30,6 +30,7 @@ function fields(namespace) {
 
 function Component(namespace, step) {
     return function ({
+        data,
         setData,
         errors,
         clearErrors
@@ -60,7 +61,9 @@ function Component(namespace, step) {
                                 <TextField
                                     fullWidth
                                     label={label}
-                                    error={errors[key] && errors[key].length > 0}
+                                    defaultValue={data?.[namespace]?.[key] || ""}
+                                    variant="filled"
+                                    error={errors?.[key]?.length  > 0}
                                     onChange={handleOnChange.bind(null, key)}
                                     onKeyUp={clearErrors.bind(null, key)}
                                     helperText={errors[key] || ""}

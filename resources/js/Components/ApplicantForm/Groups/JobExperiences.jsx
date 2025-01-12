@@ -29,26 +29,27 @@ const rowFields = labelsToFieldConfig([
 
 const defaultFormFields = defaultList.map(() => fieldsToFormObject(rowFields))
 
+const fieldKey = 'job_experience_list'
+
 const fields = [
     {
         label: 'Job Experiences',
-        key: 'job_experience_list',
+        key: fieldKey,
         defaultValue: defaultFormFields,
     },
 ]
 
 const ExperienceRow = ({
-    i,
+    index,
     row,
     onChange,
     errors,
+    data,
     clearErrors
 }) => {
-    function handleOnChange(key) {
-        return function (e) {
-            row[key] = e.target.value;
-            onChange(row);
-        }
+    function handleOnChange(key, e) {
+        row[key] = e.target.value;
+        onChange(row);
     }
 
     return (
@@ -57,7 +58,7 @@ const ExperienceRow = ({
                 sx={{ mb: 1 }} 
                 variant="h6"
             >
-                Experience {i + 1}
+                Experience {index + 1}
             </Typography>
             <Grid
                 sx={{ mb: 2 }}
@@ -68,7 +69,7 @@ const ExperienceRow = ({
                     key,
                     label,
                 }) => {
-                    const errorKey = `${i}.${key}`
+                    const errorKey = `${index}.${key}`
                     return (
                         <Grid
                             size={{
@@ -81,7 +82,9 @@ const ExperienceRow = ({
                             <TextField
                                 fullWidth
                                 label={label}
-                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                defaultValue={data?.[key] || ""}
+                                variant="filled"
+                                error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors.bind(null, errorKey)}
                                 helperText={errors[errorKey] || ""}
@@ -95,6 +98,7 @@ const ExperienceRow = ({
 }
 
 function Component({
+    data,
     setData,
     errors,
     clearErrors
@@ -119,10 +123,10 @@ function Component({
         })
     }
 
-    function handleOnChange(i) {
+    function handleOnChange(index) {
         return function (newData) {
             setData(data => {
-                data[step].job_experience_list[i] = newData;
+                data[step][fieldKey][index] = newData
                 return data
             })
         }
@@ -130,14 +134,15 @@ function Component({
 
     return (
         <>
-            {rows.map((row, i) => {
+            {rows.map((row, index) => {
                 return (
                     <ExperienceRow
-                        key={i}
+                        key={index}
                         row={row}
-                        i={i}
+                        index={index}
                         errors={errors}
-                        onChange={handleOnChange(i)}
+                        data={data?.[fieldKey]?.[index] || {}}
+                        onChange={handleOnChange(index)}
                         clearErrors={clearErrors}
                     />
                 )

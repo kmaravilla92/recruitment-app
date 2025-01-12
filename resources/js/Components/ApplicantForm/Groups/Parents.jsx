@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import {
     useEffect,
 } from 'react'
@@ -50,18 +52,24 @@ const fields = [
 
 const ParentRow = ({
     type,
+    typeKey,
     onChange,
     errors,
+    data,
     clearErrors
 }) => {
     const {
-        data,
-        setData
-    } = useForm(defaultFormFields)
+        data: rowData,
+        setData,
+    } = useForm(_.merge(
+        {},
+        defaultFormFields,
+        data
+    ));
 
     useEffect(() => {
-        onChange(data)
-    }, [data])
+        onChange(rowData)
+    }, [rowData])
 
     function handleOnChange(key, e) {
         setData(key, e.target.value)
@@ -86,7 +94,7 @@ const ParentRow = ({
                     key,
                     label
                 }) => {
-                    const errorKey = `${type.toLowerCase()}.${key}`
+                    const errorKey = `${typeKey}.${key}`
                     return (
                         <Grid
                             size={{
@@ -99,7 +107,9 @@ const ParentRow = ({
                             <TextField
                                 fullWidth
                                 label={label}
-                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                defaultValue={data?.[key] || ""}
+                                variant="filled"
+                                error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors.bind(null, errorKey)}
                                 helperText={errors[errorKey] || ""}
@@ -113,13 +123,14 @@ const ParentRow = ({
 }
 
 function Component({
+    data,
     setData,
     errors,
     clearErrors
 }) {
-    function handleOnChange(type, parentData) {
+    function handleOnChange(typeKey, parentData) {
         setData(data => {
-            data[step][`${type}_detail`] = parentData
+            data[step][typeKey] = parentData
             return data
         });
     }
@@ -127,12 +138,15 @@ function Component({
     return (
         <>
             {types.map(type => {
+                const typeKey = `${type.toLowerCase()}_detail`
                 return (
                     <ParentRow
                         key={type}
                         type={type}
+                        typeKey={typeKey}
                         errors={errors}
-                        onChange={handleOnChange.bind(this, type.toLowerCase())}
+                        data={data?.[typeKey] || {}}
+                        onChange={handleOnChange.bind(this, typeKey)}
                         clearErrors={clearErrors}
                     />
                 )

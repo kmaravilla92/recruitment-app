@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import {
     useEffect
 } from 'react'
@@ -45,28 +47,36 @@ const defaultValue = Object.fromEntries(
     })
 )
 
+const fieldKey = 'educational_background_list'
+
 const fields = [
     {
         label: 'Educational Background',
-        key: 'educational_background_list',
+        key: fieldKey,
         defaultValue: defaultValue,
     },
 ]
 
 const TypeRow = ({
     type,
+    typeKey,
     onChange,
+    data,
     errors,
     clearErrors
 }) => {
     const {
-        data,
+        data: rowData,
         setData
-    } = useForm(defaultFormFields);
+    } = useForm(_.merge(
+        {},
+        defaultFormFields,
+        data[typeKey]
+    ));
 
     useEffect(() => {
-        onChange(type.toLowerCase(), data)
-    }, [data])
+        onChange(typeKey, rowData)
+    }, [rowData])
 
     function handleOnChange(key, e) {
         setData(key, e.target.value)
@@ -93,7 +103,7 @@ const TypeRow = ({
                     key,
                     label
                 }) => {
-                    const errorKey = `${type.toLowerCase()}.${key}`;
+                    const errorKey = `${typeKey}.${key}`;
                     return (
                         <Grid
                             size={{
@@ -106,7 +116,9 @@ const TypeRow = ({
                             <TextField
                                 fullWidth
                                 label={label}
-                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                defaultValue={data?.[typeKey]?.[key] || ""}
+                                variant="filled"
+                                error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors.bind(null, errorKey)}
                                 helperText={errors[errorKey] || ""}
@@ -120,6 +132,7 @@ const TypeRow = ({
 }
 
 function Component({
+    data,
     setData,
     errors,
     clearErrors
@@ -136,11 +149,13 @@ function Component({
             spacing={2}
         >
             {types.map(type => {
- 
+                const typeKey = type.toLowerCase()
                 return (
                     <TypeRow
-                        key={type.toLowerCase()}
+                        key={typeKey}
                         type={type}
+                        typeKey={typeKey}
+                        data={data?.[fieldKey] || {}}
                         errors={errors}
                         onChange={handleOnChange}
                         clearErrors={clearErrors}

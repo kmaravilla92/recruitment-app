@@ -26,25 +26,26 @@ const rowFields = labelsToFieldConfig([
 
 const defaultFormFields = fieldsToFormObject(rowFields)
 
+const fieldKey = 'spouse_detail'
+
 const fields = [
     {
-        key: 'spouse_detail',
+        key: fieldKey,
         defaultValue: defaultFormFields
     },
 ]
 
 function Component({
+    data,
     setData,
     errors,
     clearErrors
 }) {
-    function handleOnChange(key) {
-        return function (e) {
-            setData(data => {
-                data[step].spouse_detail[key] = e.target.value
-                return data
-            })
-        }
+    function handleOnChange(key, e) {
+        setData(data => {
+            data[step].spouse_detail[key] = e.target.value
+            return data
+        })
     }
 
     return (
@@ -57,6 +58,7 @@ function Component({
                     key,
                     label
                 }) => {
+                    const errorKey = `${fieldKey}.${key}`
                     return (
                         <Grid
                             size={{
@@ -69,10 +71,12 @@ function Component({
                             <TextField
                                 fullWidth
                                 label={label}
-                                error={errors[key] && errors[key].length > 0}
+                                defaultValue={data?.[fieldKey]?.[key] || ""}
+                                variant="filled"
+                                error={errors?.[fieldKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors.bind(null, key)}
-                                helperText={errors[key] || ""}
+                                helperText={errors?.[fieldKey] || ""}
                             />
                         </Grid>
                     );

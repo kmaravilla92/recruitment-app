@@ -146,12 +146,14 @@ class StoreApplicationRequest extends FormRequest
             // Emergency Contacts
             8 => $emergency_contact_rules,
             9 => [
-                'father' => $parent_rules,
-                'mother' => $parent_rules,
+                'father_detail' => $parent_rules,
+                'mother_detail' => $parent_rules,
             ],
             10 => $sibling_rules,
             // // Spouse Information
-            11 => $spouse_rules,
+            11 => [
+                'spouse_detail' => $spouse_rules
+            ],
             // // Children Information
             12 => $child_rules,
             // // Job Experiences
@@ -163,7 +165,7 @@ class StoreApplicationRequest extends FormRequest
 
         // Add default required to all
         foreach ($rules_groups as $rules_step => $rules) {
-            if (in_array($rules_step, [7, 9])) {
+            if (in_array($rules_step, [7, 9, 11])) {
                 foreach ($rules as $group_key => $group_rules) {
                     foreach ($group_rules as $j => $field_key) {
                         $rules_groups[$rules_step][$group_key . '.' . $field_key] = 'required';
@@ -184,6 +186,8 @@ class StoreApplicationRequest extends FormRequest
                 }
             }
         }
+
+        // dd($this->input(), $rules_groups[$step]);
 
         return $rules_groups[$step];
     }
@@ -211,9 +215,13 @@ class StoreApplicationRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $step = $this->route('step');
-        $input = $this->input();
-        if (in_array($step, [8, 10, 12, 13, 14, 15])) {
+        if (in_array($step, [3, 4, 5, 6, 7, 8, 10, 12, 13, 14, 15])) {
             $map = [
+                3 => 'present_address',
+                4 => 'home_address',
+                5 => 'provincial_address',
+                6 => 'uniform_detail',
+                7 => 'educational_background_list',
                 8 => 'emergency_contact_list',
                 10 => 'sibling_detail_list',
                 12 => 'child_detail_list',
@@ -225,5 +233,28 @@ class StoreApplicationRequest extends FormRequest
         } else {
             $this->replace($this->input($step));
         }
+        // dd($this->input());
+    }
+
+    protected function passedValidation(): void
+    {
+        $step = $this->route('step');
+        if (in_array($step, [3, 4, 5, 6, 7, 8, 10, 12, 13, 14, 15])) {
+            $map = [
+                3 => 'present_address',
+                4 => 'home_address',
+                5 => 'provincial_address',
+                6 => 'uniform_detail',
+                7 => 'educational_background_list',
+                8 => 'emergency_contact_list',
+                10 => 'sibling_detail_list',
+                12 => 'child_detail_list',
+                13 => 'job_experience_list',
+                14 => 'training_detail_list',
+                15 => 'character_reference_list',
+            ];
+            $this->replace([$map[$step] => $this->input()]);
+        }
+        // dd($this->input());
     }
 }

@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import {
     useState,
     useEffect,
@@ -34,28 +36,37 @@ const rowFields = labelsToFieldConfig([
 const defaultFormField = fieldsToFormObject(rowFields)
 const defaultFormFields = Array(4).fill(defaultFormField)
 
+const fieldKey = 'child_detail_list'
+
 const fields = [
     {
         label: 'Children',
-        key: 'child_detail_list',
+        key: fieldKey,
         defaultValue: defaultFormFields,
     }
 ]
 
 function ChildRow({
-    i,
+    index,
     onChange,
     errors,
+    data,
     clearErrors
 }) {
     const {
-        data,
+        data: rowData,
         setData
-    } = useForm(defaultFormField);
+    } = useForm(_.merge(
+        {},
+        defaultFormField,
+        data
+    ));
+
+    // console.log({ index, data })
 
     useEffect(() => {
-        onChange(data)
-    }, [data])
+        onChange(rowData)
+    }, [rowData])
 
     function handleOnChange(key, e) {
         setData(key, e.target.value)
@@ -69,7 +80,7 @@ function ChildRow({
                 }}
                 variant="h6"
             >
-                Child {i + 1}
+                Child {index + 1}
             </Typography>
             <Grid
                 sx={{
@@ -82,7 +93,7 @@ function ChildRow({
                     key,
                     label
                 }) => {
-                    const errorKey = `${i}.${key}`
+                    const errorKey = `${index}.${key}`
                     return (
                         <Grid
                             size={{
@@ -95,10 +106,12 @@ function ChildRow({
                             <TextField
                                 fullWidth
                                 label={label}
-                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                defaultValue={data?.[key] || ""}
+                                variant="filled"
+                                error={errors?.[errorKey]?.length> 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors.bind(null, errorKey)}
-                                helperText={errors[errorKey] || ""}
+                                helperText={errors?.[errorKey] || ""}
                             />
                         </Grid>
                     )
@@ -109,10 +122,12 @@ function ChildRow({
 }
 
 function Component({
+    data,
     setData,
     errors,
     clearErrors
 }) {
+    console.log({ data })
     const [rows, setRows] = useState(defaultFormFields);
     
     function handleClick() {
@@ -124,22 +139,23 @@ function Component({
         })
     }
 
-    function handleOnChange(i, newData) {
+    function handleOnChange(index, newData) {
         setData(data => {
-            data[step].child_detail_list[i] = newData
+            data[step].child_detail_list[index] = newData
             return data
         })
     }
 
     return (
         <>
-            {rows.map((row, i) => {
+            {rows.map((row, index) => {
                 return (
                     <ChildRow
-                        key={i}
-                        i={i}
-                        errors={errors}
-                        onChange={handleOnChange.bind(this, i)}
+                        key={index}
+                        index={index}
+                        errors={errors?.[index]}
+                        data={data?.[fieldKey]?.[index] || {}}
+                        onChange={handleOnChange.bind(this, index)}
                         clearErrors={clearErrors}
                     />
                 )

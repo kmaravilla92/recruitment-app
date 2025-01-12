@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Requests\StoreApplicationRequest;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -32,14 +33,36 @@ Route::get('applicants/qr-registration', function () {
     return response($result->getString())->header('Content-Type', $result->getMimeType());
 });
 
-Route::get('/applicants/register/{step?}', function ($step = 1) {
+Route::get('/applicants/register/{step?}', function (Request $request, $step = 1) {
+    // $request->session()->flush();
+    $saved_data = $request->session()->get("data", []);
+    // unset($saved_data[15]);
+    // $request->session()->put('data', $saved_data);
+    // dd($saved_data);
+    $wrong_step = false;
+    if ($step < 1) {
+        $step = 1;
+        $wrong_step = true;
+    } else if ($step > 15) {
+        $step = 15;
+        $wrong_step = true;
+    }
+
+    if ($wrong_step) {
+        return to_route('applicants.register.show', ['step' => $step]);
+    }
+
     return inertia('Applicants/Form', [
         'step' => $step,
+        'savedData' => $saved_data,
     ]);
 })->name('applicants.register.show');
 
 Route::post('/applicants/register/{step?}', function (StoreApplicationRequest $request, $step = 1) {
     $cur_step = $step + 1;
+    $saved_data = $request->session()->get('data', []);
+    $saved_data[$step] = $request->input();
+    $request->session()->put("data", $saved_data);
     return to_route('applicants.register.show', ['step' => $cur_step]);
 })->name('applicants.register.post');
 

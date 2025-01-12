@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import {
     useState,
     useEffect,
@@ -32,28 +34,35 @@ const rowFields = labelsToFieldConfig([
 const defaultFormField = fieldsToFormObject(rowFields)
 const defaultFormFields = Array(4).fill(defaultFormField)
 
+const fieldKey = 'character_reference_list'
+
 const fields = [
     {
         label: 'Character References',
-        key: 'character_reference_list',
+        key: fieldKey,
         defaultValue: defaultFormFields,
     }
 ]
 
 function CharacterReferenceRow({
-    i,
-    onChange,
+    index,
+    data,
     errors,
+    onChange,
     clearErrors
 }) {
     const {
-        data,
+        data: rowData,
         setData
-    } = useForm(defaultFormField);
+    } = useForm(_.merge(
+        {},
+        defaultFormField,
+        data
+    ));
 
     useEffect(() => {
-        onChange(data)
-    }, [data])
+        onChange(rowData)
+    }, [rowData])
 
     function handleOnChange(key, e) {
         setData(key, e.target.value)
@@ -67,7 +76,7 @@ function CharacterReferenceRow({
                 }}
                 variant="h6"
             >
-                Character Reference {i + 1}
+                Character Reference {index + 1}
             </Typography>
             <Grid
                 sx={{
@@ -80,7 +89,7 @@ function CharacterReferenceRow({
                     key,
                     label
                 }) => {
-                    const errorKey = `${i}.${key}`
+                    const errorKey = `${index}.${key}`
                     return (
                         <Grid
                             size={{
@@ -93,6 +102,8 @@ function CharacterReferenceRow({
                             <TextField
                                 fullWidth
                                 label={label}
+                                defaultValue={data?.[key] || ""}
+                                variant="filled"
                                 error={errors[errorKey] && errors[errorKey].length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors.bind(null, errorKey)}
@@ -107,6 +118,7 @@ function CharacterReferenceRow({
 }
 
 function Component({
+    data,
     setData,
     errors,
     clearErrors
@@ -122,22 +134,23 @@ function Component({
         })
     }
 
-    function handleOnChange(i, newData) {
+    function handleOnChange(index, newData) {
         setData(data => {
-            data[step].character_reference_list[i] = newData
+            data[step].character_reference_list[index] = newData
             return data
         })
     }
 
     return (
         <>
-            {rows.map((row, i) => {
+            {rows.map((row, index) => {
                 return (
                     <CharacterReferenceRow
-                        key={i}
-                        i={i}
+                        key={index}
+                        index={index}
+                        data={data?.[fieldKey]?.[index] || {}}
                         errors={errors}
-                        onChange={handleOnChange.bind(this, i)}
+                        onChange={handleOnChange.bind(this, index)}
                         clearErrors={clearErrors}
                     />
                 )

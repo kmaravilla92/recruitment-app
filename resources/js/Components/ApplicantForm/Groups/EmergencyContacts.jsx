@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import {
     useState,
     useEffect,
@@ -32,10 +34,12 @@ const rowFields = labelsToFieldConfig([
 const defaultFormField = fieldsToFormObject(rowFields)
 const defaultFormFields = Array(4).fill(defaultFormField)
 
+const fieldKey = 'emergency_contact_list'
+
 const fields = [
     {
         label: 'Emergency Contacts',
-        key: 'emergency_contact_list',
+        key: fieldKey,
         defaultValue: defaultFormFields,
     }
 ]
@@ -44,16 +48,21 @@ function ContactRow({
     i,
     onChange,
     errors,
+    data,
     clearErrors
 }) {
     const {
-        data,
+        data: rowData,
         setData
-    } = useForm(defaultFormField);
+    } = useForm(_.merge(
+        {},
+        defaultFormFields,
+        data[i]
+    ));
 
     useEffect(() => {
-        onChange(data)
-    }, [data])
+        onChange(rowData)
+    }, [rowData])
 
     function handleOnChange(key, e) {
         setData(key, e.target.value)
@@ -93,6 +102,8 @@ function ContactRow({
                             <TextField
                                 fullWidth
                                 label={label}
+                                defaultValue={data && data[i] && data[i][key] || ""}
+                                variant="filled"
                                 error={errors[errorKey] && errors[errorKey].length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors.bind(null, errorKey)}
@@ -107,11 +118,12 @@ function ContactRow({
 }
 
 function Component({
+    data,
     setData,
     errors,
     clearErrors
 }) {
-    const [rows, setRows] = useState(defaultFormFields);
+    const [rows, setRows] = useState(defaultFormFields)
     
     function handleClick() {
         setRows(rows => {
@@ -124,7 +136,7 @@ function Component({
 
     function handleOnChange(i, newData) {
         setData(data => {
-            data[step].emergency_contact_list[i] = newData
+            data[step][fieldKey][i] = _.merge({}, newData)
             return data
         })
     }
@@ -137,6 +149,7 @@ function Component({
                         key={i}
                         i={i}
                         errors={errors}
+                        data={data && data[fieldKey] || {}}
                         onChange={handleOnChange.bind(this, i)}
                         clearErrors={clearErrors}
                     />

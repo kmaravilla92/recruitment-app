@@ -1,13 +1,14 @@
+import _ from 'lodash'
+
 import {
     useState,
-    useEffect
+    useEffect,
 } from 'react'
 
 import {
     useForm,
     router,
-    usePage
-} from '@inertiajs/react';
+} from '@inertiajs/react'
 
 import {
     Accordion,
@@ -16,23 +17,23 @@ import {
     Box,
     Typography,
     Stack
-} from '@mui/material';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+} from '@mui/material'
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 
-import Identification from '@/Components/ApplicantForm/Groups/Identification';
-import PersonalData from '@/Components/ApplicantForm/Groups/PersonalData';
-import Address from '@/Components/ApplicantForm/Groups/Address';
-import UniformDetail from '@/Components/ApplicantForm/Groups/UniformDetail';
-import EducationalBackground from '@/Components/ApplicantForm/Groups/EducationalBackground';
-import EmergencyContacts from '@/Components/ApplicantForm/Groups/EmergencyContacts';
-import Parents from '@/Components/ApplicantForm/Groups/Parents';
-import Siblings from '@/Components/ApplicantForm/Groups/Siblings';
-import SpouseInformation from '@/Components/ApplicantForm/Groups/SpouseInformation';
-import Children from '@/Components/ApplicantForm/Groups/Children';
-import JobExperiences from '@/Components/ApplicantForm/Groups/JobExperiences';
-import Trainings from '@/Components/ApplicantForm/Groups/Trainings';
-import CharacterReferences from '@/Components/ApplicantForm/Groups/CharacterReferences';
-import ButtonRow from '@/Components/ApplicantForm/ButtonRow';
+import Identification from '@/Components/ApplicantForm/Groups/Identification'
+import PersonalData from '@/Components/ApplicantForm/Groups/PersonalData'
+import Address from '@/Components/ApplicantForm/Groups/Address'
+import UniformDetail from '@/Components/ApplicantForm/Groups/UniformDetail'
+import EducationalBackground from '@/Components/ApplicantForm/Groups/EducationalBackground'
+import EmergencyContacts from '@/Components/ApplicantForm/Groups/EmergencyContacts'
+import Parents from '@/Components/ApplicantForm/Groups/Parents'
+import Siblings from '@/Components/ApplicantForm/Groups/Siblings'
+import SpouseInformation from '@/Components/ApplicantForm/Groups/SpouseInformation'
+import Children from '@/Components/ApplicantForm/Groups/Children'
+import JobExperiences from '@/Components/ApplicantForm/Groups/JobExperiences'
+import Trainings from '@/Components/ApplicantForm/Groups/Trainings'
+import CharacterReferences from '@/Components/ApplicantForm/Groups/CharacterReferences'
+import ButtonRow from '@/Components/ApplicantForm/ButtonRow'
 
 const items = [
     {label: 'Identification', component: Identification,},
@@ -50,7 +51,7 @@ const items = [
     {label: 'Job Experiences', component: JobExperiences,},
     {label: 'Trainings', component: Trainings,},
     {label: 'Character References', component: CharacterReferences,},
-];
+]
 
 const defaultFormFields = items.reduce((items, item) => {
     const {
@@ -73,26 +74,34 @@ const defaultFormFields = items.reduce((items, item) => {
         group[key] = value
     }
 
-    items[step] = group;
+    items[step] = group
 
-    return items;
-}, {});
+    return items
+}, {})
 
 export default function ApplicantForm({
-    step
+    step,
+    savedData,
 }) {
     const {
         data,
         setData,
         post,
-        processing,
         errors,
-        clearErrors
-    } = useForm(defaultFormFields)
+        clearErrors,
+    } = useForm(_.merge(
+        {},
+        defaultFormFields,
+        savedData
+    ))
 
     const curStep = +step
 
     function handlePrev() {
+        if (step <= 1) {
+            return
+        }
+
         router.get(
             route('applicants.register.show', [step - 1])
         )
@@ -103,7 +112,7 @@ export default function ApplicantForm({
     }
 
     function handleSubmit(e) {
-        
+        e.preventDefault()
     }
 
     return (
@@ -151,7 +160,7 @@ export default function ApplicantForm({
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Component
-                                    data={data}
+                                    data={data?.[step]}
                                     setData={setData}
                                     errors={errors}
                                     clearErrors={clearErrors}
@@ -165,6 +174,7 @@ export default function ApplicantForm({
                                     <ButtonRow
                                         type="button"
                                         onClick={handlePrev}
+                                        disabled={curStep <= 1}
                                     >
                                         Back
                                     </ButtonRow>
@@ -177,7 +187,7 @@ export default function ApplicantForm({
                                 </Stack>
                             </AccordionDetails>
                         </Accordion>
-                    );
+                    )
                 })}
                 <ButtonRow
                     type="submit"
@@ -189,5 +199,5 @@ export default function ApplicantForm({
                 </ButtonRow>
             </Box>
         </>
-    );
+    )
 }
