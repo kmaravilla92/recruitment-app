@@ -62,8 +62,6 @@ function ChildRow({
         data
     ));
 
-    // console.log({ index, data })
-
     useEffect(() => {
         onChange(rowData)
     }, [rowData])
@@ -128,7 +126,7 @@ function Component({
     clearErrors
 }) {
     console.log({ data })
-    const [rows, setRows] = useState(defaultFormFields);
+    const [rows, setRows] = useState(data[fieldKey]);
     
     function handleClick() {
         setRows(rows => {
@@ -141,7 +139,7 @@ function Component({
 
     function handleOnChange(index, newData) {
         setData(data => {
-            data[step].child_detail_list[index] = newData
+            data[step][fieldKey][index] = newData
             return data
         })
     }

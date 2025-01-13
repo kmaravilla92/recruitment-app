@@ -187,6 +187,12 @@ class StoreApplicationRequest extends FormRequest
             }
         }
 
+        foreach ($rules_groups[$step] as $field => $rules) {
+            if (str_contains($field, 'email')) {
+                $rules_groups[$step][$field] .= '|email';
+            }
+        }
+
         // dd($this->input(), $rules_groups[$step]);
 
         return $rules_groups[$step];

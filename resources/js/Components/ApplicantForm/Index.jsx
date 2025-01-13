@@ -95,6 +95,8 @@ export default function ApplicantForm({
         savedData
     ))
 
+    console.log({ data })
+
     const curStep = +step
 
     function handlePrev() {
@@ -138,13 +140,15 @@ export default function ApplicantForm({
                         Component
                     }
                 }, i) => {
+                    if (+step !== curStep) {
+                        return
+                    }
+
                     const key = `panel-${i}-content`
+
                     return (
                         <Accordion
                             key={key}
-                            sx={{
-                                display: +step === curStep ? 'block' : 'none'
-                            }}
                             defaultExpanded
                         >
                             <AccordionSummary

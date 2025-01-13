@@ -1,6 +1,13 @@
+import _ from 'lodash'
+
 import {
-    useState
+    useState,
+    useEffect,
 } from 'react'
+
+import {
+    useForm
+} from '@inertiajs/react'
 
 import {
     labelsToFieldConfig,
@@ -27,7 +34,8 @@ const rowFields = labelsToFieldConfig([
     'Position',
 ])
 
-const defaultFormFields = defaultList.map(() => fieldsToFormObject(rowFields))
+const defaultFormField = fieldsToFormObject(rowFields)
+const defaultFormFields = defaultList.map(() => defaultFormField)
 
 const fieldKey = 'job_experience_list'
 
@@ -41,15 +49,26 @@ const fields = [
 
 const ExperienceRow = ({
     index,
-    row,
     onChange,
     errors,
     data,
     clearErrors
 }) => {
+    const {
+        data: rowData,
+        setData
+    } = useForm(_.merge(
+        {},
+        defaultFormField,
+        data
+    ));
+
+    useEffect(() => {
+        onChange(rowData)
+    }, [rowData])
+
     function handleOnChange(key, e) {
-        row[key] = e.target.value;
-        onChange(row);
+        setData(key, e.target.value)
     }
 
     return (
@@ -103,7 +122,7 @@ function Component({
     errors,
     clearErrors
 }) {
-    const [rows, setRows] = useState(defaultFormFields);
+    const [rows, setRows] = useState(data[fieldKey]);
 
     function handleClick() {
         setRows(rows => {
@@ -112,29 +131,19 @@ function Component({
                 ...[rows.length + 1]
             ]
         })
-
-        setData(data => {
-            data.job_experience_list = [
-                ...data.job_experience_list,
-                ...[defaultFormFields]
-            ]
-
-            return data;
-        })
     }
 
-    function handleOnChange(index) {
-        return function (newData) {
-            setData(data => {
-                data[step][fieldKey][index] = newData
-                return data
-            })
-        }
+    function handleOnChange(index, newData) {
+        setData(data => {
+            data[step][fieldKey][index] = newData
+            return data
+        })
     }
 
     return (
         <>
             {rows.map((row, index) => {
+                console.log({ row, index })
                 return (
                     <ExperienceRow
                         key={index}
@@ -142,7 +151,7 @@ function Component({
                         index={index}
                         errors={errors}
                         data={data?.[fieldKey]?.[index] || {}}
-                        onChange={handleOnChange(index)}
+                        onChange={handleOnChange.bind(null, index)}
                         clearErrors={clearErrors}
                     />
                 )

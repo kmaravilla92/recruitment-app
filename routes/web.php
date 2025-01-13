@@ -36,7 +36,7 @@ Route::get('applicants/qr-registration', function () {
 Route::get('/applicants/register/{step?}', function (Request $request, $step = 1) {
     // $request->session()->flush();
     $saved_data = $request->session()->get("data", []);
-    // unset($saved_data[15]);
+    // unset($saved_data[8]);
     // $request->session()->put('data', $saved_data);
     // dd($saved_data);
     $wrong_step = false;

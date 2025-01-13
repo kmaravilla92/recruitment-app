@@ -120,13 +120,12 @@ function SiblingRow({
 }
 
 function Component({
-    index,
     data,
     setData,
     errors,
     clearErrors
 }) {
-    const [rows, setRows] = useState(defaultFormFields)
+    const [rows, setRows] = useState(data[fieldKey])
     
     function handleClick() {
         setRows(rows => {
@@ -139,7 +138,7 @@ function Component({
 
     function handleOnChange(index, newData) {
         setData(data => {
-            data[step].sibling_detail_list[index] = newData
+            data[step][fieldKey][index] = newData
             return data
         })
     }

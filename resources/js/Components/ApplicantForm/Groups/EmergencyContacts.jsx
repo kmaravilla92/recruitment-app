@@ -45,7 +45,7 @@ const fields = [
 ]
 
 function ContactRow({
-    i,
+    index,
     onChange,
     errors,
     data,
@@ -57,7 +57,7 @@ function ContactRow({
     } = useForm(_.merge(
         {},
         defaultFormFields,
-        data[i]
+        data[index]
     ));
 
     useEffect(() => {
@@ -76,7 +76,7 @@ function ContactRow({
                 }}
                 variant="h6"
             >
-                Contact {i + 1}
+                Contact {index + 1}
             </Typography>
             <Grid
                 sx={{
@@ -89,7 +89,7 @@ function ContactRow({
                     key,
                     label
                 }) => {
-                    const errorKey = `${i}.${key}`;
+                    const errorKey = `${index}.${key}`;
                     return (
                         <Grid
                             size={{
@@ -102,9 +102,9 @@ function ContactRow({
                             <TextField
                                 fullWidth
                                 label={label}
-                                defaultValue={data && data[i] && data[i][key] || ""}
+                                defaultValue={data?.[index]?.[key] || ""}
                                 variant="filled"
-                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors.bind(null, errorKey)}
                                 helperText={errors[errorKey] || ""}
@@ -123,7 +123,7 @@ function Component({
     errors,
     clearErrors
 }) {
-    const [rows, setRows] = useState(defaultFormFields)
+    const [rows, setRows] = useState(data[fieldKey])
     
     function handleClick() {
         setRows(rows => {
@@ -134,23 +134,23 @@ function Component({
         })
     }
 
-    function handleOnChange(i, newData) {
+    function handleOnChange(index, newData) {
         setData(data => {
-            data[step][fieldKey][i] = _.merge({}, newData)
+            data[step][fieldKey][index] = newData
             return data
         })
     }
 
     return (
         <>
-            {rows.map((row, i) => {
+            {rows.map((row, index) => {
                 return (
                     <ContactRow
-                        key={i}
-                        i={i}
+                        key={index}
+                        index={index}
                         errors={errors}
-                        data={data && data[fieldKey] || {}}
-                        onChange={handleOnChange.bind(this, i)}
+                        data={data?.[fieldKey] || {}}
+                        onChange={handleOnChange.bind(this, index)}
                         clearErrors={clearErrors}
                     />
                 )

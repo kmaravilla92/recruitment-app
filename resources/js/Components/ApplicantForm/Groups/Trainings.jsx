@@ -127,7 +127,7 @@ function Component({
     errors,
     clearErrors
 }) {
-    const [rows, setRows] = useState(defaultFormFields)
+    const [rows, setRows] = useState(data[fieldKey])
     
     function handleClick() {
         setRows(rows => {
