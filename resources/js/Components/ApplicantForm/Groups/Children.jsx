@@ -12,9 +12,10 @@ import {
 import {
     Grid2 as Grid,
     Stack,
-    TextField,
     Typography
 } from '@mui/material'
+
+import InputField from '@/Components/ApplicantForm/InputField'
 
 import {
     Add as AddIcon,
@@ -36,6 +37,7 @@ const rowFields = labelsToFieldConfig([
     {
         key: 'birthday',
         label: 'Birthday (MM/DD/YYYY)',
+        inputType: 'datepicker',
     },
 ])
 
@@ -73,8 +75,8 @@ function ChildRow({
         onChange(rowData)
     }, [rowData])
 
-    function handleOnChange(key, e) {
-        setData(key, e.target.value)
+    function handleOnChange(key, value) {
+        setData(key, value)
     }
 
     function handleRemoveClick(e) {
@@ -82,18 +84,17 @@ function ChildRow({
         onDelete(index)
     }
 
-    let deleteButton = null;
-        if (index > 0) {
-            deleteButton = <ButtonRow
-                variant="text"
-                sx={{
-                    mt: 0
-                }}
-                onClick={handleRemoveClick}
-            >
-                Delete <CloseIcon />
-            </ButtonRow>
-        }
+    let deleteButton = (
+        <ButtonRow
+            variant="text"
+            sx={{
+                mt: 0
+            }}
+            onClick={handleRemoveClick}
+        >
+            Delete <CloseIcon />
+        </ButtonRow>
+    )
 
     return (
         <>
@@ -121,7 +122,8 @@ function ChildRow({
             >
                 {rowFields.map(({
                     key,
-                    label
+                    label,
+                    inputType,
                 }) => {
                     const errorKey = `${index}.${key}`
                     return (
@@ -133,10 +135,11 @@ function ChildRow({
                             }}
                             key={key}
                         >
-                            <TextField
+                            <InputField
+                                inputType={inputType}
                                 fullWidth
                                 label={label}
-                                defaultValue={data?.[key] || ""}
+                                customValue={data?.[key] || ""}
                                 variant="filled"
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}

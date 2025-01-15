@@ -35,7 +35,7 @@ return new class extends Migration
             // Personal Data
             $table->string('contact_number')->nullable();
             $table->string('email_address')->nullable();
-            $table->string('date_of_birth')->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->string('place_of_birth')->nullable();
             $table->string('height')->nullable();
             $table->string('weight')->nullable();

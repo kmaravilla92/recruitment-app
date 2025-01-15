@@ -80,18 +80,17 @@ function CharacterReferenceRow({
         onDelete(index)
     }
 
-    let deleteButton = null;
-    if (index > 0) {
-        deleteButton = <ButtonRow
+    let deleteButton = (
+        <ButtonRow
             variant="text"
             sx={{
                 mt: 0
             }}
             onClick={handleRemoveClick}
         >
-            <CloseIcon />
+            Delete <CloseIcon />
         </ButtonRow>
-    }
+    )
 
     return (
         <>

@@ -80,9 +80,8 @@ const ExperienceRow = ({
         onDelete(index)
     }
 
-    let deleteButton = null;
-    if (index > 0) {
-        deleteButton = <ButtonRow
+    let deleteButton = (
+        <ButtonRow
             variant="text"
             sx={{
                 mt: 0
@@ -91,7 +90,7 @@ const ExperienceRow = ({
         >
             Delete <CloseIcon />
         </ButtonRow>
-    }
+    )
 
     return (
         <>

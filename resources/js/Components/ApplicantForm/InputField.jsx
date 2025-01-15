@@ -5,8 +5,8 @@ import {
 } from '@mui/material'
 
 import {
-    DatePicker,
-} from '@mui/x-date-pickers/DatePicker';
+    MobileDatePicker,
+} from '@mui/x-date-pickers/MobileDatePicker';
 
 export default function({
     inputType,
@@ -18,7 +18,7 @@ export default function({
         if ('text' == inputType) {
             onChange(e.target.value)
         } else if ('datepicker' == inputType) {
-            onChange(e)
+            onChange(e.format('YYYY-MM-DD'))
         }
     }
     
@@ -34,7 +34,7 @@ export default function({
 
     if ('datepicker' == inputType) {
         return (
-            <DatePicker
+            <MobileDatePicker
                 {...props}
                 defaultValue={dayjs(customValue)}
                 onChange={handleOnChange}

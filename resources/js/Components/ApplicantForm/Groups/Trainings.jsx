@@ -84,9 +84,8 @@ function TrainingRow({
         onDelete(index)
     }
 
-    let deleteButton = null;
-    if (index > 0) {
-        deleteButton = <ButtonRow
+    let deleteButton = (
+        <ButtonRow
             variant="text"
             sx={{
                 mt: 0
@@ -95,7 +94,7 @@ function TrainingRow({
         >
             Delete <CloseIcon />
         </ButtonRow>
-    }
+    )
 
     return (
         <>

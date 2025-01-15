@@ -10,9 +10,10 @@ import {
 
 import {
     Grid2 as Grid,
-    TextField,
     Typography
 } from '@mui/material'
+
+import InputField from '@/Components/ApplicantForm/InputField'
 
 import {
     labelsToFieldConfig,
@@ -32,6 +33,7 @@ const rowFields = labelsToFieldConfig([
     {
         key: 'birthday',
         label: 'Birthday (MM/DD/YYYY)',
+        inputType: 'datepicker',
     }
 ])
 
@@ -71,8 +73,8 @@ const ParentRow = ({
         onChange(rowData)
     }, [rowData])
 
-    function handleOnChange(key, e) {
-        setData(key, e.target.value)
+    function handleOnChange(key, value) {
+        setData(key, value)
     }
 
     return (
@@ -92,7 +94,8 @@ const ParentRow = ({
             >
                 {rowFields.map(({
                     key,
-                    label
+                    label,
+                    inputType,
                 }) => {
                     const errorKey = `${typeKey}.${key}`
                     return (
@@ -104,10 +107,11 @@ const ParentRow = ({
                             }}
                             key={key}
                         >
-                            <TextField
+                            <InputField
+                                inputType={inputType}
                                 fullWidth
                                 label={label}
-                                defaultValue={data?.[key] || ""}
+                                customValue={data?.[key] || ""}
                                 variant="filled"
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}

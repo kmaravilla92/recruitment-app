@@ -1,12 +1,8 @@
 import {
-    useForm
-} from '@inertiajs/react'
-
-import {
     Grid2 as Grid,
-    TextField,
-    Typography
 } from '@mui/material'
+
+import InputField from '@/Components/ApplicantForm/InputField'
 
 import {
     labelsToFieldConfig,
@@ -21,6 +17,7 @@ const rowFields = labelsToFieldConfig([
     {
         key: 'birthday',
         label: 'Birthday (MM/DD/YYYY)',
+        inputType: 'datepicker',
     },
 ])
 
@@ -41,9 +38,9 @@ function Component({
     errors,
     clearErrors
 }) {
-    function handleOnChange(key, e) {
+    function handleOnChange(key, value) {
         setData(data => {
-            data[step].spouse_detail[key] = e.target.value
+            data[step].spouse_detail[key] = value
             return data
         })
     }
@@ -56,7 +53,8 @@ function Component({
             >
                 {rowFields.map(({
                     key,
-                    label
+                    label,
+                    inputType,
                 }) => {
                     const errorKey = `${fieldKey}.${key}`
                     return (
@@ -68,10 +66,11 @@ function Component({
                             }}
                             key={key}
                         >
-                            <TextField
+                            <InputField
+                                inputType={inputType}
                                 fullWidth
                                 label={label}
-                                defaultValue={data?.[fieldKey]?.[key] || ""}
+                                customValue={data?.[fieldKey]?.[key] || ""}
                                 variant="filled"
                                 error={errors?.[fieldKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}

@@ -78,15 +78,9 @@ Route::post('/applicants/register/{step?}', function (StoreApplicationRequest $r
     return to_route('applicants.register.show', ['step' => $cur_step]);
 })->name('applicants.register.post');
 
-Route::get('/test', function (Request $request) {
-    $saved_data = $request->session()->get('data', []);
-    $view_data = collect($saved_data)->collapse()->all();
-    // dd($view_data);
-    // dd(
-    //     collect($saved_data)->collapse()->map(fn() => 1)->all()
-    // );
-    return view('docs.doc-1', $view_data);
-    // return view('docs.doc-2', $view_data);
+Route::get('/test/{user}', function (Request $request, User $user) {
+    return view('docs.doc-1', $user->toArray());
+    return view('docs.doc-2', $user->toArray());
 });
 
 require __DIR__.'/auth.php';

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -70,6 +71,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $casts = [
+        'present_address' => 'array',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -80,21 +85,31 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'present_address' => 'array',
+            'home_address' => 'array',
+            'provincial_address' => 'array',
+            'uniform_detail' => 'array',
+            'educational_background_list' => 'array',
+            'emergency_contact_list' => 'array',
+            'father_detail' => 'array',
+            'mother_detail' => 'array',
+            'sibling_detail_list' => 'array',
+            'spouse_detail' => 'array',
+            'child_detail_list' => 'array',
+            'job_experience_list' => 'array',
+            'training_detail_list' => 'array',
+            'character_reference_list' => 'array',
+            'lesp_expiry_date' => 'date:Y-m-d',
+            'date_of_birth' => 'date:Y-m-d',
         ];
     }
 
     public static function saveApplicationData($steps_data = [])
     {
-        $steps_data = collect($steps_data);
-        $data = $steps_data->collapse()->map(function ($item, $key) {
-            if (is_array($item)) {
-                return json_encode($item);
-            }
-            return $item;
-        })->all();
+        $data = collect($steps_data)->collapse()->all();
 
-        $data['name'] = "{$data['first_name']} {$data['middle_name']} {$data['last_name']}";
-        $data['password'] = bcrypt("app" . date('Y'));
+        // $data['lesp_expiry_date'] = Carbon::parse($data['lesp_expiry_date'])->format('Y-m-d');
+        // $data['date_of_birth'] = Carbon::parse($data['date_of_birth'])->format('Y-m-d');
 
         static::updateOrCreate(
             ['email' => $data['email_address']],
