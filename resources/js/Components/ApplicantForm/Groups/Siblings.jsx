@@ -11,9 +11,15 @@ import {
 
 import {
     Grid2 as Grid,
+    Stack,
     TextField,
     Typography
 } from '@mui/material'
+
+import {
+    Add as AddIcon,
+    Close as CloseIcon,
+} from '@mui/icons-material'
 
 import {
     labelsToFieldConfig,
@@ -34,7 +40,7 @@ const rowFields = labelsToFieldConfig([
 ])
 
 const defaultFormField = fieldsToFormObject(rowFields)
-const defaultFormFields = Array(4).fill(defaultFormField)
+const defaultFormFields = Array(1).fill(defaultFormField)
 
 const fieldKey = 'sibling_detail_list'
 
@@ -48,9 +54,10 @@ const fields = [
 
 function SiblingRow({
     index,
-    onChange,
-    errors,
     data,
+    errors,
+    onChange,
+    onDelete,
     clearErrors
 }) {
     const {
@@ -70,16 +77,41 @@ function SiblingRow({
         setData(key, e.target.value)
     }
 
+    function handleRemoveClick(e) {
+        e.preventDefault();
+        onDelete(index)
+    }
+
+    let deleteButton = null;
+    if (index > 0) {
+        deleteButton = <ButtonRow
+            variant="text"
+            sx={{
+                mt: 0
+            }}
+            onClick={handleRemoveClick}
+        >
+            Delete <CloseIcon />
+        </ButtonRow>
+    }
+
     return (
         <>
-            <Typography
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
                 sx={{
                     mb: 2,
                 }}
-                variant="h6"
             >
-                Child {index + 1}
-            </Typography>
+                <Typography
+                    variant="h6"
+                >
+                    Sibling {index + 1}
+                </Typography>
+                {deleteButton}
+            </Stack>
             <Grid
                 sx={{
                     mb: 2
@@ -136,6 +168,16 @@ function Component({
         })
     }
 
+    function handleOnDelete(index) {
+        setRows(rows => {
+            return rows.filter((row, i) => i !== index)
+        })
+        setData(data => {
+            data[step][fieldKey] = data[step][fieldKey].filter((row, i) => i !== index)
+            return data
+        })
+    }
+
     function handleOnChange(index, newData) {
         setData(data => {
             data[step][fieldKey][index] = newData
@@ -153,6 +195,7 @@ function Component({
                         errors={errors}
                         data={data?.[fieldKey]?.[index] || {}}
                         onChange={handleOnChange.bind(this, index)}
+                        onDelete={handleOnDelete.bind(this, index)}
                         clearErrors={clearErrors}
                     />
                 )
@@ -160,7 +203,7 @@ function Component({
             <ButtonRow
                 onClick={handleClick} variant="text"
             >
-                Add Sibling +
+                Add Sibling <AddIcon />
             </ButtonRow>
         </>
     )

@@ -33,18 +33,22 @@ Route::get('applicants/qr-registration', function () {
     return response($result->getString())->header('Content-Type', $result->getMimeType());
 });
 
-Route::get('/applicants/register/{step?}', function (Request $request, $step = 1) {
+Route::get('/applicants/register/{step?}', function (Request $request, $step = null) {
     // $request->session()->flush();
     $saved_data = $request->session()->get("data", []);
     // unset($saved_data[8]);
     // $request->session()->put('data', $saved_data);
     // dd($saved_data);
     $wrong_step = false;
+
     if ($step < 1) {
         $step = 1;
         $wrong_step = true;
     } else if ($step > 15) {
         $step = 15;
+        $wrong_step = true;
+    } else if (empty($step)) {
+        $step = 1;
         $wrong_step = true;
     }
 

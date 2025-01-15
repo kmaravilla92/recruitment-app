@@ -11,9 +11,15 @@ import {
 
 import {
     Grid2 as Grid,
+    Stack,
     TextField,
     Typography
 } from '@mui/material'
+
+import {
+    Add as AddIcon,
+    Close as CloseIcon,
+} from '@mui/icons-material'
 
 import {
     labelsToFieldConfig,
@@ -32,7 +38,7 @@ const rowFields = labelsToFieldConfig([
 ])
 
 const defaultFormField = fieldsToFormObject(rowFields)
-const defaultFormFields = Array(4).fill(defaultFormField)
+const defaultFormFields = Array(1).fill(defaultFormField)
 
 const fieldKey = 'character_reference_list'
 
@@ -49,6 +55,7 @@ function CharacterReferenceRow({
     data,
     errors,
     onChange,
+    onDelete,
     clearErrors
 }) {
     const {
@@ -64,20 +71,45 @@ function CharacterReferenceRow({
         onChange(rowData)
     }, [rowData])
 
-    function handleOnChange(key, e) {
+    function handleInputChange(key, e) {
         setData(key, e.target.value)
+    }
+
+    function handleRemoveClick(e) {
+        e.preventDefault();
+        onDelete(index)
+    }
+
+    let deleteButton = null;
+    if (index > 0) {
+        deleteButton = <ButtonRow
+            variant="text"
+            sx={{
+                mt: 0
+            }}
+            onClick={handleRemoveClick}
+        >
+            <CloseIcon />
+        </ButtonRow>
     }
 
     return (
         <>
-            <Typography
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
                 sx={{
                     mb: 2,
                 }}
-                variant="h6"
             >
-                Character Reference {index + 1}
-            </Typography>
+                <Typography
+                    variant="h6"
+                >
+                    Character Reference {index + 1}
+                </Typography>
+                {deleteButton}
+            </Stack>
             <Grid
                 sx={{
                     mb: 2
@@ -105,7 +137,7 @@ function CharacterReferenceRow({
                                 defaultValue={data?.[key] || ""}
                                 variant="filled"
                                 error={errors[errorKey] && errors[errorKey].length > 0}
-                                onChange={handleOnChange.bind(null, key)}
+                                onChange={handleInputChange.bind(null, key)}
                                 onKeyUp={clearErrors.bind(null, errorKey)}
                                 helperText={errors[errorKey] || ""}
                             />
@@ -125,7 +157,7 @@ function Component({
 }) {
     const [rows, setRows] = useState(data[fieldKey]);
     
-    function handleClick() {
+    function handleAddClick() {
         setRows(rows => {
             return [
                 ...rows,
@@ -134,9 +166,19 @@ function Component({
         })
     }
 
+    function handleOnDelete(index) {
+        setRows(rows => {
+            return rows.filter((row, i) => i !== index)
+        })
+        setData(data => {
+            data[step][fieldKey] = data[step][fieldKey].filter((row, i) => i !== index)
+            return data
+        })
+    }
+
     function handleOnChange(index, newData) {
         setData(data => {
-            data[step].character_reference_list[index] = newData
+            data[step][fieldKey][index] = newData
             return data
         })
     }
@@ -151,14 +193,16 @@ function Component({
                         data={data?.[fieldKey]?.[index] || {}}
                         errors={errors}
                         onChange={handleOnChange.bind(this, index)}
+                        onDelete={handleOnDelete.bind(this, index)}
                         clearErrors={clearErrors}
                     />
                 )
             })}
             <ButtonRow
-                onClick={handleClick} variant="text"
+                onClick={handleAddClick}
+                variant="text"
             >
-                Add Character Reference +
+                Add Character Reference <AddIcon />
             </ButtonRow>
         </>
     )

@@ -15,17 +15,20 @@ import {
 } from '@/helpers'
 
 import {
-    Button,
     Grid2 as Grid,
+    Stack,
     TextField,
     Typography,
 } from '@mui/material'
 
+import {
+    Add as AddIcon,
+    Close as CloseIcon,
+} from '@mui/icons-material'
+
 import ButtonRow from '@/Components/ApplicantForm/ButtonRow'
 
 const step = 13
-
-const defaultList = [1, 2, 3, 4]
 
 const rowFields = labelsToFieldConfig([
     'Company',
@@ -35,7 +38,7 @@ const rowFields = labelsToFieldConfig([
 ])
 
 const defaultFormField = fieldsToFormObject(rowFields)
-const defaultFormFields = defaultList.map(() => defaultFormField)
+const defaultFormFields = Array(1).fill(null).map(() => defaultFormField)
 
 const fieldKey = 'job_experience_list'
 
@@ -49,10 +52,11 @@ const fields = [
 
 const ExperienceRow = ({
     index,
-    onChange,
-    errors,
     data,
-    clearErrors
+    errors,
+    onChange,
+    onDelete,
+    clearErrors,
 }) => {
     const {
         data: rowData,
@@ -71,14 +75,41 @@ const ExperienceRow = ({
         setData(key, e.target.value)
     }
 
+    function handleRemoveClick(e) {
+        e.preventDefault();
+        onDelete(index)
+    }
+
+    let deleteButton = null;
+    if (index > 0) {
+        deleteButton = <ButtonRow
+            variant="text"
+            sx={{
+                mt: 0
+            }}
+            onClick={handleRemoveClick}
+        >
+            Delete <CloseIcon />
+        </ButtonRow>
+    }
+
     return (
         <>
-            <Typography
-                sx={{ mb: 1 }} 
-                variant="h6"
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{
+                    mb: 2,
+                }}
             >
-                Experience {index + 1}
-            </Typography>
+                <Typography
+                    variant="h6"
+                >
+                    Experience {index + 1}
+                </Typography>
+                {deleteButton}
+            </Stack>
             <Grid
                 sx={{ mb: 2 }}
                 container
@@ -133,6 +164,17 @@ function Component({
         })
     }
 
+    function handleOnDelete(index) {
+        setRows(rows => {
+            return rows.filter((row, i) => i !== index)
+        })
+
+        setData(data => {
+            data[step][fieldKey] = data[step][fieldKey].filter((row, i) => i !== index)
+            return data
+        })
+    }
+
     function handleOnChange(index, newData) {
         setData(data => {
             data[step][fieldKey][index] = newData
@@ -152,6 +194,7 @@ function Component({
                         errors={errors}
                         data={data?.[fieldKey]?.[index] || {}}
                         onChange={handleOnChange.bind(null, index)}
+                        onDelete={handleOnDelete.bind(this, index)}
                         clearErrors={clearErrors}
                     />
                 )
@@ -160,7 +203,7 @@ function Component({
                 variant="text"
                 onClick={handleClick}
             >
-                Add Experience +
+                Add Experience <AddIcon />
             </ButtonRow>
         </>
     );

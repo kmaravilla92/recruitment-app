@@ -95,8 +95,6 @@ export default function ApplicantForm({
         savedData
     ))
 
-    console.log({ data })
-
     const curStep = +step
 
     function handlePrev() {

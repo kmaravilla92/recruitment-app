@@ -1,7 +1,13 @@
+import dayjs from 'dayjs'
+
 import {
     Grid2 as Grid,
-    TextField
+    TextField,
 } from '@mui/material'
+
+import {
+    DatePicker,
+} from '@mui/x-date-pickers/DatePicker';
 
 import {
     labelsToFieldConfig
@@ -32,7 +38,8 @@ function Component({
     errors,
     clearErrors
 }) {
-    function handleOnChange(key, e) {
+    function handleOnChange(key, e, o) {
+        console.log({ key, e, o })
         setData(data => {
             data[step][key] = e.target.value
             return data
