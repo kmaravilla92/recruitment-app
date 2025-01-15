@@ -63,8 +63,8 @@ function ContactRow({
         setData
     } = useForm(_.merge(
         {},
-        defaultFormFields,
-        data[index]
+        defaultFormField,
+        data
     ));
 
     useEffect(() => {
@@ -134,7 +134,7 @@ function ContactRow({
                             <TextField
                                 fullWidth
                                 label={label}
-                                defaultValue={data?.[index]?.[key] || ""}
+                                defaultValue={data?.[key] || ""}
                                 variant="filled"
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
@@ -192,7 +192,7 @@ function Component({
                         key={index}
                         index={index}
                         errors={errors}
-                        data={data?.[fieldKey] || {}}
+                        data={data?.[fieldKey]?.[index] || {}}
                         onChange={handleOnChange.bind(this, index)}
                         onDelete={handleOnDelete.bind(this, index)}
                         clearErrors={clearErrors}

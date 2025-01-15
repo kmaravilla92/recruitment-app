@@ -14,7 +14,6 @@ const rowFields = labelsToFieldConfig([
     'Shoe Size',
     'Waistline',
     'Polo Shirt Size',
-    'City',
     'Pershing Cap Size',
     'Type A Uniform Size',
 ])

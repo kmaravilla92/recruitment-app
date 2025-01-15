@@ -34,7 +34,7 @@ const rowFields = labelsToFieldConfig([
     'Full Name',
     'Occupation',
     'Company',
-    'Address',
+    'Contact Number',
 ])
 
 const defaultFormField = fieldsToFormObject(rowFields)

@@ -41,7 +41,7 @@ return new class extends Migration
             $table->string('weight')->nullable();
             $table->string('gender')->nullable();
             $table->string('religion')->nullable();
-            $table->string('is_full_vacinated')->nullable();
+            $table->string('is_fully_vaccinated')->nullable();
             $table->string('citizenship')->nullable();
             $table->string('blood_type')->nullable();
             $table->string('hair_color')->nullable();

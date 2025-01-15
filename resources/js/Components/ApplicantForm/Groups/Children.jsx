@@ -172,6 +172,7 @@ function Component({
         setRows(rows => {
             return rows.filter((row, i) => i !== index)
         })
+
         setData(data => {
             data[step][fieldKey] = data[step][fieldKey].filter((row, i) => i !== index)
             return data

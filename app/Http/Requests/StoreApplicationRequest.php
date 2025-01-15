@@ -88,7 +88,7 @@ class StoreApplicationRequest extends FormRequest
             'full_name',
             'occupation',
             'company',
-            'address',
+            'contact_number',
         ];
 
         $rules_groups = [
@@ -132,7 +132,6 @@ class StoreApplicationRequest extends FormRequest
                 'shoe_size',
                 'waistline',
                 'polo_shirt_size',
-                'city',
                 'pershing_cap_size',
                 'type_a_uniform_size',
             ],
