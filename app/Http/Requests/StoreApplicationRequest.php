@@ -114,7 +114,7 @@ class StoreApplicationRequest extends FormRequest
                 'weight',
                 'gender',
                 'religion',
-                'fully_vaccinated',
+                'is_fully_vaccinated',
                 'citizenship',
                 'blood_type',
                 'hair_color',

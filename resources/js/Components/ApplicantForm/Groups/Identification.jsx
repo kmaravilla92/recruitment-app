@@ -1,7 +1,8 @@
 import {
     Grid2 as Grid,
-    TextField
 } from '@mui/material'
+
+import InputField from '@/Components/ApplicantForm/InputField'
 
 import {
     labelsToFieldConfig
@@ -18,7 +19,10 @@ const fields = labelsToFieldConfig([
     'HDMF Number',
     'PhilHealth Number',
     'License SBR Number',
-    'LESP Expiry Date',
+    {
+        label: 'LESP Expiry Date',
+        inputType: 'datepicker',
+    }
 ])
 
 function Component({
@@ -27,9 +31,9 @@ function Component({
     errors,
     clearErrors
 }) {
-    function handleOnChange(key, e) {
+    function handleOnChange(key, value) {
         setData(data => {
-            data[step][key] = e.target.value
+            data[step][key] = value
             return data
         })
     }
@@ -43,6 +47,7 @@ function Component({
                 {fields.map(({
                     key,
                     label,
+                    inputType,
                 }) => {
                     return (
                         <Grid
@@ -53,10 +58,11 @@ function Component({
                             }}
                             key={key}
                         >
-                            <TextField
+                            <InputField
+                                inputType={inputType}
                                 fullWidth
                                 label={label}
-                                defaultValue={data?.[key] || ""}
+                                customValue={data?.[key] || ""}
                                 variant="filled"
                                 error={errors?.[key]?.length  > 0}
                                 onChange={handleOnChange.bind(null, key)}

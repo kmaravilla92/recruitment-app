@@ -2098,7 +2098,7 @@
             </td>
             <td class="c25" colspan="2" rowspan="1">
                 <p class="c70"><span class="c6">COVID FULLY VACINATED (YES/NO)</span></p>
-                <p class="c0"><span class="c11">{{ $fully_vaccinated }}</span></p>
+                <p class="c0"><span class="c11">{{ $is_fully_vaccinated }}</span></p>
             </td>
         </tr>
         <tr class="c102">

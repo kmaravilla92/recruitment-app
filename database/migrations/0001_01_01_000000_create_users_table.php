@@ -83,7 +83,7 @@ return new class extends Migration
             $table->json('job_experience_list')->nullable();
 
             // Training Seminar List
-            $table->json('traning_detail_list')->nullable();
+            $table->json('training_detail_list')->nullable();
 
             // Character Reference List
             $table->json('character_reference_list')->nullable();

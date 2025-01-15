@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Requests\StoreApplicationRequest;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,7 +39,7 @@ Route::get('applicants/qr-registration', function () {
 Route::get('/applicants/register/{step?}', function (Request $request, $step = null) {
     // $request->session()->flush();
     $saved_data = $request->session()->get("data", []);
-    // unset($saved_data[8]);
+    // unset($saved_data[2]);
     // $request->session()->put('data', $saved_data);
     // dd($saved_data);
     $wrong_step = false;
@@ -69,21 +70,23 @@ Route::post('/applicants/register/{step?}', function (StoreApplicationRequest $r
     $saved_data = $request->session()->get('data', []);
     $saved_data[$step] = $request->input();
     $request->session()->put("data", $saved_data);
+
+    if (15 == $step) {
+        User::saveApplicationData($saved_data);
+    }
+
     return to_route('applicants.register.show', ['step' => $cur_step]);
 })->name('applicants.register.post');
 
 Route::get('/test', function (Request $request) {
     $saved_data = $request->session()->get('data', []);
-    $view_data = [];
-    foreach ($saved_data as $fields) {
-        foreach ($fields as $field => $value) {
-            $view_data[$field] = $value;
-        }
-    }
-
+    $view_data = collect($saved_data)->collapse()->all();
     // dd($view_data);
-    // return view('docs.doc-1', $view_data);
-    return view('docs.doc-2', $view_data);
+    // dd(
+    //     collect($saved_data)->collapse()->map(fn() => 1)->all()
+    // );
+    return view('docs.doc-1', $view_data);
+    // return view('docs.doc-2', $view_data);
 });
 
 require __DIR__.'/auth.php';
