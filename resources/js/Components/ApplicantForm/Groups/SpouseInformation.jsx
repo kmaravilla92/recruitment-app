@@ -11,6 +11,8 @@ import {
 
 const step = 11
 
+const label = 'Spouse Information'
+
 const rowFields = labelsToFieldConfig([
     'Full Name',
     'Occupation',
@@ -39,7 +41,7 @@ function Component({
     clearErrors
 }) {
     function handleOnChange(key, value) {
-        setData(data => {
+        setData && setData(data => {
             data[step].spouse_detail[key] = value
             return data
         })
@@ -74,7 +76,7 @@ function Component({
                                 variant="filled"
                                 error={errors?.[fieldKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors.bind(null, key)}
+                                onKeyUp={clearErrors?.bind(null, key)}
                                 helperText={errors?.[fieldKey] || ""}
                             />
                         </Grid>
@@ -87,6 +89,7 @@ function Component({
 
 export default {
     step,
+    label,
     Component,
     fields,
 }

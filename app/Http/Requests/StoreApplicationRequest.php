@@ -21,7 +21,7 @@ class StoreApplicationRequest extends FormRequest
      */
     public function rules(): array
     {
-        // dd($this->input());
+        dd($this->input());
         $step = $this->route('step');
 
         $address_rules = [

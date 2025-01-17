@@ -1,11 +1,6 @@
 import _ from 'lodash'
 
 import {
-    useState,
-    useEffect,
-} from 'react'
-
-import {
     useForm,
     router,
 } from '@inertiajs/react'
@@ -18,7 +13,10 @@ import {
     Typography,
     Stack
 } from '@mui/material'
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
+
+import {
+    ArrowDownward as ArrowDownwardIcon
+} from '@mui/icons-material'
 
 import Identification from '@/Components/ApplicantForm/Groups/Identification'
 import PersonalData from '@/Components/ApplicantForm/Groups/PersonalData'
@@ -35,33 +33,29 @@ import Trainings from '@/Components/ApplicantForm/Groups/Trainings'
 import CharacterReferences from '@/Components/ApplicantForm/Groups/CharacterReferences'
 import ButtonRow from '@/Components/ApplicantForm/ButtonRow'
 
-const items = [
-    {label: 'Identification', component: Identification,},
-    {label: 'Personal Data', component: PersonalData,},
-    {label: 'Present Address', component: Address('present_address', 3),},
-    {label: 'Home Address', component: Address('home_address', 4),},
-    {label: 'Provincial Address', component: Address('provincial_address', 5),},
-    {label: 'Uniform Detail', component: UniformDetail,},
-    {label: 'Educational Background', component: EducationalBackground,},
-    {label: 'Emergency Contacts', component: EmergencyContacts,},
-    {label: 'Parents Background', component: Parents,},
-    {label: 'Siblings Information', component: Siblings,},
-    {label: 'Spouse Information', component: SpouseInformation,},
-    {label: 'Children Information', component: Children,},
-    {label: 'Job Experiences', component: JobExperiences,},
-    {label: 'Trainings', component: Trainings,},
-    {label: 'Character References', component: CharacterReferences,},
+export const items = [
+    Identification,
+    PersonalData,
+    Address('present_address', 3, 'Present Address'),
+    Address('home_address', 4, 'Home Address'),
+    Address('provincial_address', 5, 'Provincial Address'),
+    UniformDetail,
+    EducationalBackground,
+    EmergencyContacts,
+    Parents,
+    Siblings,
+    SpouseInformation,
+    Children,
+    JobExperiences,
+    Trainings,
+    CharacterReferences,
 ]
 
 const defaultFormFields = items.reduce((items, item) => {
     const {
-        component,
-    } = item
-
-    const {
         step,
         fields,
-    } = component
+    } = item
 
     const group = items[step] || {}
 
@@ -107,12 +101,9 @@ export default function ApplicantForm({
         )
     }
 
-    function handleNext() {
-        post(route('applicants.register.post', [step]))
-    }
-
     function handleSubmit(e) {
         e.preventDefault()
+        post(route('applicants.register.post', [step]))
     }
 
     return (
@@ -121,7 +112,7 @@ export default function ApplicantForm({
                 sx={{
                     mb: 3
                 }}
-                variant="h3"
+                variant="h4"
             >
                 Applicant Registration Form
             </Typography>
@@ -133,10 +124,8 @@ export default function ApplicantForm({
             >
                 {items.map(({
                     label,
-                    component: {
-                        step,
-                        Component
-                    }
+                    step,
+                    Component,
                 }, i) => {
                     if (+step !== curStep) {
                         return
@@ -174,15 +163,13 @@ export default function ApplicantForm({
                                     }}
                                 >
                                     <ButtonRow
-                                        type="button"
                                         onClick={handlePrev}
                                         disabled={curStep <= 1}
                                     >
                                         Back
                                     </ButtonRow>
                                     <ButtonRow
-                                        type="button"
-                                        onClick={handleNext}
+                                        type="submit"
                                     >
                                         Next
                                     </ButtonRow>
@@ -191,14 +178,6 @@ export default function ApplicantForm({
                         </Accordion>
                     )
                 })}
-                <ButtonRow
-                    type="submit"
-                    sx={{
-                        display: 'none'
-                    }}
-                >
-                    Submit
-                </ButtonRow>
             </Box>
         </>
     )

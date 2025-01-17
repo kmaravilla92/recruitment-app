@@ -22,6 +22,8 @@ import {
 
 const step = 7
 
+const label = 'Educational Background'
+
 const types = [
     'Tertiary',
     'Vocational',
@@ -32,7 +34,7 @@ const types = [
 const rowFields = labelsToFieldConfig([
     'Educational Status',
     'School',
-    'Period/Covered',
+    'Period Covered',
     'Degree/Course',
 ])
 
@@ -79,7 +81,7 @@ const TypeRow = ({
     }, [rowData])
 
     function handleOnChange(key, e) {
-        setData(key, e.target.value)
+        setData && setData(key, e.target.value)
     }
 
     return (
@@ -120,8 +122,8 @@ const TypeRow = ({
                                 variant="filled"
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors.bind(null, errorKey)}
-                                helperText={errors[errorKey] || ""}
+                                onKeyUp={clearErrors?.bind(null, errorKey)}
+                                helperText={errors?.[errorKey] || ""}
                             />
                         </Grid>
                     )
@@ -138,7 +140,7 @@ function Component({
     clearErrors
 }) {
     function handleOnChange(type, educData) {
-        setData(data => {
+        setData && setData(data => {
             data[step].educational_background_list[type] = educData
             return data
         })
@@ -168,6 +170,7 @@ function Component({
 
 export default {
     step,
+    label,
     Component,
     fields
 }

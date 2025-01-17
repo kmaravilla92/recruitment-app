@@ -10,6 +10,8 @@ import {
 
 const step = 6
 
+const label = 'Uniform Detail'
+
 const rowFields = labelsToFieldConfig([
     'Shoe Size',
     'Waistline',
@@ -37,7 +39,7 @@ function Component({
     clearErrors,
 }) {
     function handleOnChange(key, e) {
-        setData(data => {
+        setData && setData(data => {
             data[step].uniform_detail[key] = e.target.value;
             return data;
         })
@@ -66,8 +68,8 @@ function Component({
                                 variant="filled"
                                 error={errors?.[key]?.length  > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors.bind(null, key)}
-                                helperText={errors[key] || ""}
+                                onKeyUp={clearErrors?.bind(null, key)}
+                                helperText={errors?.[key] || ""}
                             />
                         </Grid>
                     );
@@ -79,6 +81,7 @@ function Component({
 
 export default {
     step,
+    label,
     Component,
     fields
 }

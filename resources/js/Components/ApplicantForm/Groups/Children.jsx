@@ -31,6 +31,8 @@ import ButtonRow from '@/Components/ApplicantForm/ButtonRow'
 
 const step = 12
 
+const label = 'Children Information'
+
 const rowFields = labelsToFieldConfig([
     'Full Name',
     'Contact Number',
@@ -76,7 +78,7 @@ function ChildRow({
     }, [rowData])
 
     function handleOnChange(key, value) {
-        setData(key, value)
+        setData && setData(key, value)
     }
 
     function handleRemoveClick(e) {
@@ -143,7 +145,7 @@ function ChildRow({
                                 variant="filled"
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors.bind(null, errorKey)}
+                                onKeyUp={clearErrors?.bind(null, errorKey)}
                                 helperText={errors?.[errorKey] || ""}
                             />
                         </Grid>
@@ -160,7 +162,7 @@ function Component({
     errors,
     clearErrors
 }) {
-    const [rows, setRows] = useState(data[fieldKey]);
+    const [rows, setRows] = useState(data?.[fieldKey] || []);
     
     function handleClick() {
         setRows(rows => {
@@ -176,14 +178,14 @@ function Component({
             return rows.filter((row, i) => i !== index)
         })
 
-        setData(data => {
+        setData && setData(data => {
             data[step][fieldKey] = data[step][fieldKey].filter((row, i) => i !== index)
             return data
         })
     }
 
     function handleOnChange(index, newData) {
-        setData(data => {
+        setData && setData(data => {
             data[step][fieldKey][index] = newData
             return data
         })
@@ -215,6 +217,7 @@ function Component({
 
 export default {
     step,
+    label,
     Component,
     fields
 }

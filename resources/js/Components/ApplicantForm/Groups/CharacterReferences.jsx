@@ -30,6 +30,8 @@ import ButtonRow from '@/Components/ApplicantForm/ButtonRow'
 
 const step = 15
 
+const label = 'Character References'
+
 const rowFields = labelsToFieldConfig([
     'Full Name',
     'Occupation',
@@ -72,7 +74,7 @@ function CharacterReferenceRow({
     }, [rowData])
 
     function handleInputChange(key, e) {
-        setData(key, e.target.value)
+        setData && setData(key, e.target.value)
     }
 
     function handleRemoveClick(e) {
@@ -135,10 +137,10 @@ function CharacterReferenceRow({
                                 label={label}
                                 defaultValue={data?.[key] || ""}
                                 variant="filled"
-                                error={errors[errorKey] && errors[errorKey].length > 0}
+                                error={errors?.[errorKey]?.length > 0}
                                 onChange={handleInputChange.bind(null, key)}
-                                onKeyUp={clearErrors.bind(null, errorKey)}
-                                helperText={errors[errorKey] || ""}
+                                onKeyUp={clearErrors?.bind(null, errorKey)}
+                                helperText={errors?.[errorKey] || ""}
                             />
                         </Grid>
                     )
@@ -154,7 +156,7 @@ function Component({
     errors,
     clearErrors
 }) {
-    const [rows, setRows] = useState(data[fieldKey]);
+    const [rows, setRows] = useState(data?.[fieldKey] || []);
     
     function handleAddClick() {
         setRows(rows => {
@@ -169,14 +171,14 @@ function Component({
         setRows(rows => {
             return rows.filter((row, i) => i !== index)
         })
-        setData(data => {
+        setData && setData(data => {
             data[step][fieldKey] = data[step][fieldKey].filter((row, i) => i !== index)
             return data
         })
     }
 
     function handleOnChange(index, newData) {
-        setData(data => {
+        setData && setData(data => {
             data[step][fieldKey][index] = newData
             return data
         })
@@ -209,6 +211,7 @@ function Component({
 
 export default {
     step,
+    label,
     Component,
     fields
 }

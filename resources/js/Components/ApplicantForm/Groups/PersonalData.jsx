@@ -10,6 +10,8 @@ import {
 
 const step = 2
 
+const label = 'Personal Data'
+
 const fields = labelsToFieldConfig([
     'Contact Number',
     'Email Address',
@@ -40,7 +42,7 @@ function Component({
     clearErrors
 }) {
     function handleOnChange(key, value) {
-        setData(data => {
+        setData && setData(data => {
             data[step][key] = value
             return data
         })
@@ -74,8 +76,8 @@ function Component({
                                 variant="filled"
                                 error={errors?.[key]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors.bind(null, key)}
-                                helperText={errors[key] || ""}
+                                onKeyUp={clearErrors?.bind(null, key)}
+                                helperText={errors?.[key] || ""}
                             />
                         </Grid>
                     )
@@ -87,6 +89,7 @@ function Component({
 
 export default {
     step,
+    label,
     Component,
     fields,
 }

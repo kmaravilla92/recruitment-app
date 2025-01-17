@@ -22,6 +22,8 @@ import {
 
 const step = 9
 
+const label = 'Parents'
+
 const types = [
     'Father',
     'Mother',
@@ -74,7 +76,7 @@ const ParentRow = ({
     }, [rowData])
 
     function handleOnChange(key, value) {
-        setData(key, value)
+        setData && setData(key, value)
     }
 
     return (
@@ -115,8 +117,8 @@ const ParentRow = ({
                                 variant="filled"
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors.bind(null, errorKey)}
-                                helperText={errors[errorKey] || ""}
+                                onKeyUp={clearErrors?.bind(null, errorKey)}
+                                helperText={errors?.[errorKey] || ""}
                             />
                         </Grid>
                     )
@@ -133,7 +135,7 @@ function Component({
     clearErrors
 }) {
     function handleOnChange(typeKey, parentData) {
-        setData(data => {
+        setData && setData(data => {
             data[step][typeKey] = parentData
             return data
         });
@@ -161,6 +163,7 @@ function Component({
 
 export default {
     step,
+    label,
     Component,
     fields
 }

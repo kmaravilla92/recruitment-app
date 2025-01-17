@@ -107,9 +107,8 @@ class User extends Authenticatable
     public static function saveApplicationData($steps_data = [])
     {
         $data = collect($steps_data)->collapse()->all();
-
-        // $data['lesp_expiry_date'] = Carbon::parse($data['lesp_expiry_date'])->format('Y-m-d');
-        // $data['date_of_birth'] = Carbon::parse($data['date_of_birth'])->format('Y-m-d');
+        $data['name'] = "{$data['first_name']} {$data['middle_name']} {$data['last_name']}";
+        $data['password'] = bcrypt('applicant2025');
 
         static::updateOrCreate(
             ['email' => $data['email_address']],

@@ -36,7 +36,7 @@ function Component(namespace, step) {
         clearErrors
     }) {
         function handleOnChange(key, e) {
-            setData(data => {
+            setData && setData(data => {
                 data[step][namespace][key] = e.target.value
                 return data
             })
@@ -65,8 +65,8 @@ function Component(namespace, step) {
                                     variant="filled"
                                     error={errors?.[key]?.length  > 0}
                                     onChange={handleOnChange.bind(null, key)}
-                                    onKeyUp={clearErrors.bind(null, key)}
-                                    helperText={errors[key] || ""}
+                                    onKeyUp={clearErrors?.bind(null, key)}
+                                    helperText={errors?.[key] || ""}
                                 />
                             </Grid>
                         )
@@ -77,9 +77,10 @@ function Component(namespace, step) {
     }
 }
 
-export default function(namespace, step) {
+export default function(namespace, step, label) {
     return {
         step,
+        label,
         Component: Component(namespace, step),
         fields: fields(namespace),
     }

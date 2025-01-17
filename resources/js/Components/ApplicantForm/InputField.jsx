@@ -38,6 +38,14 @@ export default function({
                 {...props}
                 defaultValue={dayjs(customValue)}
                 onChange={handleOnChange}
+                slotProps={{
+                    textField: {
+                        fullWidth: props.fullWidth,
+                        variant: props.variant,
+                        error: props.error,
+                        helperText: props.helperText,
+                    }
+                }}
             />
         )
     }
