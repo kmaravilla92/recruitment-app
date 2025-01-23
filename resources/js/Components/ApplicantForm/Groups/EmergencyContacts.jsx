@@ -12,9 +12,10 @@ import {
 import {
     Grid2 as Grid,
     Stack,
-    TextField,
     Typography
 } from '@mui/material'
+
+import InputField from '@/Components/ApplicantForm/InputField'
 
 import {
     Add as AddIcon,
@@ -73,8 +74,8 @@ function ContactRow({
         onChange(rowData)
     }, [rowData])
 
-    function handleOnChange(key, e) {
-        setData && setData(key, e.target.value)
+    function handleOnChange(key, value) {
+        setData && setData(key, value)
     }
 
     function handleRemoveClick(e) {
@@ -135,11 +136,9 @@ function ContactRow({
                             }}
                             key={key}
                         >
-                            <TextField
-                                fullWidth
+                            <InputField
                                 label={label}
-                                defaultValue={data?.[key] || ""}
-                                variant="filled"
+                                customValue={data?.[key] || ""}
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors?.bind(null, errorKey)}

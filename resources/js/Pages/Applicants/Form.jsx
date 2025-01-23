@@ -16,25 +16,12 @@ export default function Form({
 }) {
     return (
         <>
-            <Head title="Applicants Registration" />
+            <Head title="Applicants Registration | Fill Up" />
             <App>
-                <Box
-                    sx={{
-                        py: {
-                            xs: 4,
-                            md: 6,
-                        },
-                    }}
-                >
-                    <Container
-                        maxWidth="xl"
-                    >
-                        <ApplicantForm
-                            step={+step}
-                            savedData={savedData}
-                        />
-                    </Container>
-                </Box>
+                <ApplicantForm
+                    step={+step}
+                    savedData={savedData}
+                />
             </App>
         </>
     );

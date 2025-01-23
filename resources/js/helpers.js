@@ -7,10 +7,12 @@ export function labelsToFieldConfig(labels) {
         let key = ''
         let label = ''
         let inputType = ''
+        let selectOptions = []
         if (typeof labelEntry == 'object') {
             label = labelEntry?.label || ''
             key = labelEntry?.key || toSnakeCase(label)
             inputType = labelEntry?.inputType || 'text'
+            selectOptions = labelEntry?.selectOptions || []
         } else {
             key = toSnakeCase(labelEntry)
             label = labelEntry
@@ -20,7 +22,8 @@ export function labelsToFieldConfig(labels) {
         return {
             key,
             label,
-            inputType
+            inputType,
+            selectOptions
         }
     })
 }

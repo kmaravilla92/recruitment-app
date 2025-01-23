@@ -22,14 +22,94 @@ const fields = labelsToFieldConfig([
     'Place Of Birth',
     'Height',
     'Weight',
-    'Gender',
+    {
+        key: 'gender',
+        label: 'Gender',
+        inputType: 'select',
+        selectOptions: [
+            {
+                value: 'male',
+                label: 'Male',
+            },
+            {
+                value: 'female',
+                label: 'Female',
+            },
+        ],
+    },
     'Religion',
     {
         key: 'is_fully_vaccinated',
         label: 'Fully Vaccinated?',
+        inputType: 'switch',
     },
     'Citizenship',
-    'Blood Type',
+    {
+        key: 'civil_status',
+        label: 'Civil Status',
+        inputType: 'select',
+        selectOptions: [
+            {
+                value: 'Single',
+                label: 'Single',
+            },
+            {
+                value: 'Married',
+                label: 'Married',
+            },
+            {
+                value: 'Widowed',
+                label: 'Widowed',
+            },
+            {
+                value: 'Separated',
+                label: 'Separated',
+            },
+            {
+                value: 'Divorced',
+                label: 'Divorced',
+            },
+        ],
+    },
+    {
+        key: 'blood_type',
+        label: 'Blood Type',
+        inputType: 'select',
+        selectOptions: [
+            {
+                value: 'A+',
+                label: 'A+',
+            },
+            {
+                value: 'A-',
+                label: 'A-',
+            },
+            {
+                value: 'B+',
+                label: 'B+',
+            },
+            {
+                value: 'B-',
+                label: 'B-',
+            },
+            {
+                value: 'O+',
+                label: 'O+',
+            },
+            {
+                value: 'O-',
+                label: 'O-',
+            },
+            {
+                value: 'AB+',
+                label: 'AB+',
+            },
+            {
+                value: 'AB-',
+                label: 'AB-',
+            },
+        ],
+    },
     'Hair Color',
     'Driver License Number',
     'Distinguishing Mark',
@@ -54,11 +134,11 @@ function Component({
                 container
                 spacing={2}
             >
-                {fields.map(({
-                    key,
-                    label,
-                    inputType
-                }) => {
+                {fields.map(field => {
+                    const key = field.key
+                    const label = field.label
+                    const inputType = field.inputType
+                    const selectOptions = field.selectOptions || []
                     return (
                         <Grid
                             size={{
@@ -70,14 +150,13 @@ function Component({
                         >
                             <InputField
                                 inputType={inputType}
-                                fullWidth
                                 label={label}
                                 customValue={data?.[key] || ""}
-                                variant="filled"
                                 error={errors?.[key]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors?.bind(null, key)}
                                 helperText={errors?.[key] || ""}
+                                selectOptions={selectOptions}
                             />
                         </Grid>
                     )

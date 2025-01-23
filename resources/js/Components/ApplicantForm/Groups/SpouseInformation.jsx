@@ -70,10 +70,8 @@ function Component({
                         >
                             <InputField
                                 inputType={inputType}
-                                fullWidth
                                 label={label}
                                 customValue={data?.[fieldKey]?.[key] || ""}
-                                variant="filled"
                                 error={errors?.[fieldKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors?.bind(null, key)}

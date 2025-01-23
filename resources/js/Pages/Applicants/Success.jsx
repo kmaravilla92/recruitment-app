@@ -19,7 +19,7 @@ export default function Form({
 }) {
     return (
         <>
-            <Head title="Applicants Registration - Success" />
+            <Head title="Applicants Registration | Success" />
             <App>
                 <Box
                     sx={{

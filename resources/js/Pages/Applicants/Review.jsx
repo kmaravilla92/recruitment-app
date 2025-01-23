@@ -30,7 +30,7 @@ export default function Form({
 
     return (
         <>
-            <Head title="Applicants Registration - Review Data" />
+            <Head title="Applicants Registration | Review Data" />
             <App>
                 <Box
                     sx={{

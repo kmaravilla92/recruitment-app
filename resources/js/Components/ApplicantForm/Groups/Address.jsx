@@ -1,7 +1,8 @@
 import {
     Grid2 as Grid,
-    TextField
 } from '@mui/material'
+
+import InputField from '@/Components/ApplicantForm/InputField'
 
 import {
     labelsToFieldConfig,
@@ -35,9 +36,9 @@ function Component(namespace, step) {
         errors,
         clearErrors
     }) {
-        function handleOnChange(key, e) {
+        function handleOnChange(key, value) {
             setData && setData(data => {
-                data[step][namespace][key] = e.target.value
+                data[step][namespace][key] = value
                 return data
             })
         }
@@ -58,11 +59,9 @@ function Component(namespace, step) {
                                 }}
                                 key={key}
                             >
-                                <TextField
-                                    fullWidth
+                                <InputField
                                     label={label}
-                                    defaultValue={data?.[namespace]?.[key] || ""}
-                                    variant="filled"
+                                    customValue={data?.[namespace]?.[key] || ""}
                                     error={errors?.[key]?.length  > 0}
                                     onChange={handleOnChange.bind(null, key)}
                                     onKeyUp={clearErrors?.bind(null, key)}

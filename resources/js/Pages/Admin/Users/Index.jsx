@@ -34,7 +34,7 @@ export default function UserList({
     }
     return (
         <>
-            <Head title="Admin - Users" />
+            <Head title="Admin | Users" />
             <App>
                 <Box
                     sx={{

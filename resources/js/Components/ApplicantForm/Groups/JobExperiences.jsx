@@ -17,7 +17,6 @@ import {
 import {
     Grid2 as Grid,
     Stack,
-    TextField,
     Typography,
 } from '@mui/material'
 
@@ -25,6 +24,8 @@ import {
     Add as AddIcon,
     Close as CloseIcon,
 } from '@mui/icons-material'
+
+import InputField from '@/Components/ApplicantForm/InputField'
 
 import ButtonRow from '@/Components/ApplicantForm/ButtonRow'
 
@@ -73,8 +74,8 @@ const ExperienceRow = ({
         onChange(rowData)
     }, [rowData])
 
-    function handleOnChange(key, e) {
-        setData && setData(key, e.target.value)
+    function handleOnChange(key, value) {
+        setData && setData(key, value)
     }
 
     function handleRemoveClick(e) {
@@ -130,11 +131,9 @@ const ExperienceRow = ({
                             }}
                             key={key}
                         >
-                            <TextField
-                                fullWidth
+                            <InputField
                                 label={label}
-                                defaultValue={data?.[key] || ""}
-                                variant="filled"
+                                customValue={data?.[key] || ""}
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors?.bind(null, errorKey)}

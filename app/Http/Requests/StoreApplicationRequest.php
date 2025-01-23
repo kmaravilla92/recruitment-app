@@ -21,7 +21,7 @@ class StoreApplicationRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd($this->input());
+        // dd($this->input());
         $step = $this->route('step');
 
         $address_rules = [
@@ -117,6 +117,7 @@ class StoreApplicationRequest extends FormRequest
                 'religion',
                 'is_fully_vaccinated',
                 'citizenship',
+                'civil_status',
                 'blood_type',
                 'hair_color',
                 'driver_license_number',

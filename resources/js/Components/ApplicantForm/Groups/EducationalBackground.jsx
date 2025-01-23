@@ -11,9 +11,10 @@ import {
 import {
     Grid2 as Grid,
     Stack,
-    TextField,
     Typography,
 } from '@mui/material'
+
+import InputField from '@/Components/ApplicantForm/InputField'
 
 import {
     labelsToFieldConfig,
@@ -80,8 +81,8 @@ const TypeRow = ({
         onChange(typeKey, rowData)
     }, [rowData])
 
-    function handleOnChange(key, e) {
-        setData && setData(key, e.target.value)
+    function handleOnChange(key, value) {
+        setData && setData(key, value)
     }
 
     return (
@@ -115,11 +116,9 @@ const TypeRow = ({
                             }}
                             key={key}
                         >
-                            <TextField
-                                fullWidth
+                            <InputField
                                 label={label}
-                                defaultValue={data?.[typeKey]?.[key] || ""}
-                                variant="filled"
+                                customValue={data?.[typeKey]?.[key] || ""}
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
                                 onKeyUp={clearErrors?.bind(null, errorKey)}

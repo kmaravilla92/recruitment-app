@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Requests\StoreApplicationRequest;
+use App\Http\Requests\SignInRequest;
 use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -16,23 +18,33 @@ use iio\libmergepdf\Merger;
 use iio\libmergepdf\Pages;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+    if (Auth::check()) {
+        return to_route('admin.dashboard');
+    }
+    return inertia('Welcome');
+})->name('welcome.show');
+
+Route::post('/auth/login', function (SignInRequest $request) {
+    $credentials = $request->safe()->only([
+        'email',
+        'password',
     ]);
-});
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    $remember_me = $request->input('remember_me');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+    if (Auth::attempt($credentials, $remember_me)) {
+        return to_route('admin.dashboard');
+    } 
+
+    return back()->withErrors([
+        'xxx' => ''
+    ]);
+})->name('auth.login.post');
+
+Route::get('/auth/logout', function () {
+    Auth::logout();
+    return to_route('welcome.show');
+})->name('auth.logout');
 
 Route::get('/applicants/qr-registration', function () {
     $qr_code = new QrCode(route('applicants.register.show'));
@@ -95,7 +107,36 @@ Route::post('/applicants/register/{step?}', function (StoreApplicationRequest $r
     return to_route('applicants.register.show', ['step' => $cur_step]);
 })->name('applicants.register.post');
 
-Route::prefix('/admin')->name('admin.')->group(function () {
+Route::prefix('/admin')->middleware('auth')->name('admin.')->group(function () {
+    Route::get('/', function () {
+        $stats = [
+            [
+                'title' => 'New Submissions',
+                'stat' => '23',
+                'icon' => 'SendIcon',
+            ],
+            [
+                'title' => 'New Hires',
+                'stat' => '16',
+                'icon' => 'ThumbUpIcon',
+            ],
+            [
+                'title' => 'Processing Applications',
+                'stat' => '23',
+                'icon' => 'GroupIcon',
+            ],
+            [
+                'title' => 'Rejected Applications',
+                'stat' => '16',
+                'icon' => 'ThumbDownIcon',
+            ],
+        ];
+    
+        return inertia('Admin/Dashboard/Index', [
+            'stats' => $stats,
+        ]);
+    })->name('dashboard');
+
     Route::get('/users', function () {
         $users = User::all();
         return inertia('Admin/Users/Index', [
@@ -126,5 +167,3 @@ Route::prefix('/admin')->name('admin.')->group(function () {
         return Storage::download("{$user->id}/doc-4.pdf", "personnel-data-form-{$user->id}.pdf");
     })->name('print-personnel-data-form');
 });
-
-require __DIR__ . '/auth.php';

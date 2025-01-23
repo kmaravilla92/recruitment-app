@@ -6,12 +6,16 @@ import {
 } from '@inertiajs/react'
 
 import {
+    useTheme,
+} from '@mui/material/styles'
+
+import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
     Box,
     Typography,
-    Stack
+    Stack,
 } from '@mui/material'
 
 import {
@@ -77,6 +81,7 @@ export default function ApplicantForm({
     step,
     savedData,
 }) {
+    const theme = useTheme()
     const {
         data,
         setData,
@@ -143,11 +148,23 @@ export default function ApplicantForm({
                                 aria-controls={key}
                                 id={key}
                             >
-                                <Typography
-                                    variant="h5"
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
                                 >
-                                    {label}
-                                </Typography>
+                                    <Typography
+                                        variant="h5"
+                                        sx={{
+                                            mr: 1,
+                                            color: theme.palette.primary.main,
+                                        }}
+                                    >
+                                        {label}
+                                    </Typography>
+                                    <em>(Put N/A if data is unavailable)</em>
+                                </Box>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Component

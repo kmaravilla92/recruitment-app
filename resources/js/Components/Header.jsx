@@ -1,36 +1,77 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
+import {
+    AppBar,
+    Box,
+    Container,
+    Stack,
+    Toolbar,
+    Typography,
+    IconButton
+} from "@mui/material"
+import MenuIcon from "@mui/icons-material/Menu"
+
+import appLogoSrc from "../../img/app-logo.png"
 
 export default function Header() {
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography
-                        variant="h6"
-                        component="div"
+        <AppBar
+            position="sticky"
+            sx={{
+                zIndex: (theme) => theme.zIndex.drawer + 1
+            }}
+        >
+            <Toolbar
+                disableGutters
+            >
+                <Container
+                    maxWidth="xl"
+                >
+                    <Stack
+                        direction="row"
+                        spacing={2}
                         sx={{
-                            flexGrow: 1,
+                            width: "100%",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            py: 2,
                         }}
                     >
-                        Recruitment App
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-        </Box>
-    );
+                        <Stack
+                            direction="row"
+                            spacing={2}
+                            sx={{
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <img
+                                src={appLogoSrc}
+                                width="50"
+                                height="50"
+                            />
+                            <Typography
+                                variant="h6"
+                                component="div"
+                                sx={{
+                                    textTransform: "uppercase",
+                                }}
+                            >
+                                Shared Services
+                            </Typography>
+                        </Stack>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{
+                                p: 0,
+                            }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    </Stack>
+                </Container>
+            </Toolbar>
+        </AppBar>
+    )
 }
