@@ -14,7 +14,10 @@ const groupFields = labelsToFieldConfig([
     'Street',
     'Barangay',
     'City',
-    'Province',
+    {
+        label: 'Province',
+        allowNA: true,
+    },
     'Region',
 ])
 
@@ -49,6 +52,7 @@ function Component(namespace, step) {
                     {groupFields.map(({
                         key,
                         label,
+                        allowNA,
                     }) => {
                         return (
                             <Grid
@@ -64,8 +68,9 @@ function Component(namespace, step) {
                                     customValue={data?.[namespace]?.[key] || ""}
                                     error={errors?.[key]?.length  > 0}
                                     onChange={handleOnChange.bind(null, key)}
-                                    onKeyUp={clearErrors?.bind(null, key)}
+                                    clearErrors={clearErrors?.bind(null, key)}
                                     helperText={errors?.[key] || ""}
+                                    allowNA={allowNA}
                                 />
                             </Grid>
                         )

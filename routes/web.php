@@ -37,7 +37,7 @@ Route::post('/auth/login', function (SignInRequest $request) {
     } 
 
     return back()->withErrors([
-        'xxx' => ''
+        'xxx' => 'xxx'
     ]);
 })->name('auth.login.post');
 
@@ -112,22 +112,22 @@ Route::prefix('/admin')->middleware('auth')->name('admin.')->group(function () {
         $stats = [
             [
                 'title' => 'New Submissions',
-                'stat' => '23',
+                'stat' => User::applicant()->new()->count(),
                 'icon' => 'SendIcon',
             ],
             [
                 'title' => 'New Hires',
-                'stat' => '16',
+                'stat' => User::applicant()->hired()->count(),
                 'icon' => 'ThumbUpIcon',
             ],
             [
                 'title' => 'Processing Applications',
-                'stat' => '23',
+                'stat' => User::applicant()->processing()->count(),
                 'icon' => 'GroupIcon',
             ],
             [
                 'title' => 'Rejected Applications',
-                'stat' => '16',
+                'stat' => User::applicant()->rejected()->count(),
                 'icon' => 'ThumbDownIcon',
             ],
         ];
@@ -137,10 +137,10 @@ Route::prefix('/admin')->middleware('auth')->name('admin.')->group(function () {
         ]);
     })->name('dashboard');
 
-    Route::get('/users', function () {
-        $users = User::all();
-        return inertia('Admin/Users/Index', [
-            'users' => $users,
+    Route::get('/applicants', function () {
+        $applicants = User::applicant()->get();
+        return inertia('Admin/Applicants/Index', [
+            'applicants' => $applicants,
         ]);
     })->name('users.list');
 

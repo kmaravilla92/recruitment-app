@@ -14,29 +14,14 @@ import {
 
 import App from '@/Layouts/App'
 
-export default function Form({
-    savedData,
-}) {
+export default function Form() {
     return (
         <>
             <Head title="Applicants Registration | Success" />
             <App>
-                <Box
-                    sx={{
-                        py: {
-                            xs: 4,
-                            md: 6,
-                        },
-                    }}
-                >
-                    <Container
-                        maxWidth="xl"
-                    >
-                        <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
-                            Congratulations on completing your registration.
-                        </Alert>
-                    </Container>
-                </Box>
+                <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+                    Congratulations! Your registration is completed. We will contact you as soon as possible.
+                </Alert>
             </App>
         </>
     );

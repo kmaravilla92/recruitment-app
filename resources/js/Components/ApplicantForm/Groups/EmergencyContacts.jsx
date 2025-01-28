@@ -10,6 +10,10 @@ import {
 } from '@inertiajs/react'
 
 import {
+    useTheme,
+} from '@mui/material/styles'
+
+import {
     Grid2 as Grid,
     Stack,
     Typography
@@ -35,7 +39,10 @@ const label = 'Emergency Contacts'
 
 const rowFields = labelsToFieldConfig([
     'Name',
-    'Address',
+    {
+        label: 'Address',
+        allowNA: true,
+    },
     'Relation',
     'Contact Number',
 ])
@@ -74,6 +81,8 @@ function ContactRow({
         onChange(rowData)
     }, [rowData])
 
+    const theme = useTheme()
+
     function handleOnChange(key, value) {
         setData && setData(key, value)
     }
@@ -110,6 +119,9 @@ function ContactRow({
             >
                 <Typography
                     variant="h6"
+                    sx={{
+                        color: theme.palette.primary.main,
+                    }}
                 >
                     Contact {index + 1}
                 </Typography>
@@ -124,7 +136,8 @@ function ContactRow({
             >
                 {rowFields.map(({
                     key,
-                    label
+                    label,
+                    allowNA
                 }) => {
                     const errorKey = `${index}.${key}`;
                     return (
@@ -141,8 +154,9 @@ function ContactRow({
                                 customValue={data?.[key] || ""}
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, errorKey)}
+                                clearErrors={clearErrors?.bind(null, errorKey)}
                                 helperText={errors?.[errorKey] || ""}
+                                allowNA={allowNA}
                             />
                         </Grid>
                     )
@@ -202,12 +216,12 @@ function Component({
                     />
                 )
             })}
-            <ButtonRow
+            {/* <ButtonRow
                 onClick={handleClick}
                 variant="text"
             >
                 Add Contact <AddIcon />
-            </ButtonRow>
+            </ButtonRow> */}
         </>
     )
 }

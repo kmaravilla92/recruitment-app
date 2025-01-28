@@ -13,14 +13,35 @@ const step = '1'
 const label = 'Identification'
 
 const fields = labelsToFieldConfig([
-    'First Name',
-    'Middle Name',
-    'Last Name',
-    'TIN Number',
-    'SSS Number',
-    'HDMF Number',
-    'PhilHealth Number',
-    'License SBR Number',
+    {
+        label: 'First Name',
+    },
+    {
+        label: 'Middle Name',
+    },
+    {
+        label: 'Last Name',
+    },
+    {
+        label: 'TIN Number',
+        allowNA: true,
+    },
+    {
+        label: 'SSS Number',
+        allowNA: true,
+    },
+    {
+        label: 'HDMF Number',
+        allowNA: true,
+    },
+    {
+        label: 'PhilHealth Number',
+        allowNA: true,
+    },
+    {
+        label: 'License SBR Number',
+        allowNA: true,
+    },
     {
         label: 'LESP Expiry Date',
         inputType: 'datepicker',
@@ -50,6 +71,7 @@ function Component({
                     key,
                     label,
                     inputType,
+                    allowNA
                 }) => {
                     return (
                         <Grid
@@ -66,8 +88,9 @@ function Component({
                                 customValue={data?.[key] || ""}
                                 error={errors?.[key]?.length  > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, key)}
+                                clearErrors={clearErrors?.bind(null, key)}
                                 helperText={errors?.[key] || ""}
+                                allowNA={allowNA}
                             />
                         </Grid>
                     );

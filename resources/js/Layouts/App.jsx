@@ -2,31 +2,37 @@ import CssBaseline from "@mui/material/CssBaseline"
 import {
     Box,
     Container,
+    Toolbar,
 } from "@mui/material"
 import Drawer from "@/Components/Drawer"
 import Header from "@/Components/Header"
 
 export default function App({
-    children
+    children,
 }) {
     return (
         <>
-            <CssBaseline />
-            <Header />
-            {/* <Drawer /> */}
-            <Box
-                sx={{
-                    py: {
-                        xs: 4,
-                        md: 6,
-                    },
-                }}
-            >
-                <Container
-                    maxWidth="xl"
+            <Box sx={{ display: 'flex' }}>
+                <CssBaseline />
+                <Header />
+                <Drawer />
+                <Box
+                    component="main"
+                    sx={{
+                        flexGrow: 1,
+                        px: 4,
+                    }}
                 >
-                    {children}
-                </Container>
+                    <Toolbar />
+                    <Container
+                        maxWidth="xl"
+                        sx={{
+                            pt: 10,
+                        }}
+                    >
+                        {children}
+                    </Container>
+                </Box>
             </Box>
         </>
     )

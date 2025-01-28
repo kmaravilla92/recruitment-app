@@ -10,6 +10,10 @@ import {
 } from '@inertiajs/react'
 
 import {
+    useTheme,
+} from '@mui/material/styles'
+
+import {
     Grid2 as Grid,
     Stack,
     Typography
@@ -40,11 +44,14 @@ const rowFields = labelsToFieldConfig([
         key: 'birthday',
         label: 'Birthday (MM/DD/YYYY)',
         inputType: 'datepicker',
+        allowNA: true,
     },
 ])
 
+const maxRows = 3
+
 const defaultFormField = fieldsToFormObject(rowFields)
-const defaultFormFields = Array(1).fill(defaultFormField)
+const defaultFormFields = Array(maxRows).fill(defaultFormField)
 
 const fieldKey = 'sibling_detail_list'
 
@@ -76,6 +83,8 @@ function SiblingRow({
     useEffect(() => {
         onChange(rowData)
     }, [rowData])
+
+    const theme = useTheme()
 
     function handleOnChange(key, value) {
         setData && setData(key, value)
@@ -110,6 +119,9 @@ function SiblingRow({
             >
                 <Typography
                     variant="h6"
+                    sx={{
+                        color: theme.palette.primary.main,
+                    }}
                 >
                     Sibling {index + 1}
                 </Typography>
@@ -126,6 +138,7 @@ function SiblingRow({
                     key,
                     label,
                     inputType,
+                    allowNA,
                 }) => {
                     const errorKey = `${index}.${key}`
                     return (
@@ -143,8 +156,9 @@ function SiblingRow({
                                 customValue={data?.[key] || ""}                                
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, errorKey)}
+                                clearErrors={clearErrors?.bind(null, errorKey)}
                                 helperText={errors?.[errorKey] || ""}
+                                allowNA={allowNA}
                             />
                         </Grid>
                     )
@@ -188,6 +202,17 @@ function Component({
         })
     }
 
+    let addButton = null
+    if (rows.length < maxRows) {
+        addButton = (
+            <ButtonRow
+                onClick={handleClick} variant="text"
+            >
+                Add Sibling <AddIcon />
+            </ButtonRow>
+        )
+    }
+
     return (
         <>
             {rows.map((row, index) => {
@@ -203,11 +228,7 @@ function Component({
                     />
                 )
             })}
-            <ButtonRow
-                onClick={handleClick} variant="text"
-            >
-                Add Sibling <AddIcon />
-            </ButtonRow>
+            {addButton}
         </>
     )
 }

@@ -10,6 +10,10 @@ import {
 } from '@inertiajs/react'
 
 import {
+    useTheme,
+} from '@mui/material/styles'
+
+import {
     labelsToFieldConfig,
     fieldsToFormObject,
 } from '@/helpers'
@@ -40,8 +44,10 @@ const rowFields = labelsToFieldConfig([
     'Position',
 ])
 
+const maxRows = 3
+
 const defaultFormField = fieldsToFormObject(rowFields)
-const defaultFormFields = Array(1).fill(null).map(() => defaultFormField)
+const defaultFormFields = Array(maxRows).fill(null).map(() => defaultFormField)
 
 const fieldKey = 'job_experience_list'
 
@@ -73,6 +79,8 @@ const ExperienceRow = ({
     useEffect(() => {
         onChange(rowData)
     }, [rowData])
+
+    const theme = useTheme()
 
     function handleOnChange(key, value) {
         setData && setData(key, value)
@@ -107,6 +115,9 @@ const ExperienceRow = ({
             >
                 <Typography
                     variant="h6"
+                    sx={{
+                        color: theme.palette.primary.main,
+                    }}
                 >
                     Experience {index + 1}
                 </Typography>
@@ -136,7 +147,7 @@ const ExperienceRow = ({
                                 customValue={data?.[key] || ""}
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, errorKey)}
+                                clearErrors={clearErrors?.bind(null, errorKey)}
                                 helperText={errors?.[errorKey] || ""}
                             />
                         </Grid>
@@ -182,10 +193,21 @@ function Component({
         })
     }
 
+    let addButton = null
+    if (rows.length < maxRows) {
+        addButton = (
+            <ButtonRow
+                variant="text"
+                onClick={handleClick}
+            >
+                Add Experience <AddIcon />
+            </ButtonRow>
+        )
+    }
+
     return (
         <>
             {rows.map((row, index) => {
-                console.log({ row, index })
                 return (
                     <ExperienceRow
                         key={index}
@@ -199,12 +221,7 @@ function Component({
                     />
                 )
             })}
-            <ButtonRow
-                variant="text"
-                onClick={handleClick}
-            >
-                Add Experience <AddIcon />
-            </ButtonRow>
+            {addButton}
         </>
     );
 }

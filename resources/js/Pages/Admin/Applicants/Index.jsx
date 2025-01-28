@@ -1,7 +1,5 @@
 import {
     Head,
-    Link,
-    router,
 } from '@inertiajs/react'
 
 import {
@@ -19,13 +17,13 @@ import {
 } from '@mui/material'
 
 import {
-    Print as PrintIcon
+    PictureAsPdf as PictureAsPdfIcon
 } from '@mui/icons-material'
 
 import App from '@/Layouts/App'
 
 export default function UserList({
-    users,
+    applicants,
 }) {
     function handleClick(userId) {
         window.open(
@@ -34,7 +32,7 @@ export default function UserList({
     }
     return (
         <>
-            <Head title="Admin | Users" />
+            <Head title="Admin | Applicants" />
             <App>
                 <Box
                     sx={{
@@ -59,32 +57,36 @@ export default function UserList({
                                 <TableHead>
                                 <TableRow>
                                     <TableCell>Application ID</TableCell>
-                                    <TableCell>Full Name</TableCell>
+                                    <TableCell>Last Name</TableCell>
+                                    <TableCell>First Name</TableCell>
                                     <TableCell>E-mail Address</TableCell>
                                     <TableCell>Contact #</TableCell>
+                                    <TableCell>Status</TableCell>
                                     <TableCell>Actions</TableCell>
                                 </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                {users.map((user) => (
+                                {applicants.map((applicant) => (
                                     <TableRow
-                                        key={user.id}
+                                        key={applicant.id}
                                         sx={{
                                             '&:last-child td, &:last-child th': {
                                                 border: 0
                                             }
                                         }}
                                     >
-                                        <TableCell component="th" scope="row">{user.id}</TableCell>
-                                        <TableCell>{user.last_name}, {user.first_name} {user.middle_name}</TableCell>
-                                        <TableCell>{user.email_address}</TableCell>
-                                        <TableCell>{user.contact_number}</TableCell>
+                                        <TableCell component="th" scope="row">{applicant.id}</TableCell>
+                                        <TableCell>{applicant.last_name}</TableCell>
+                                        <TableCell>{applicant.first_name}</TableCell>
+                                        <TableCell>{applicant.email}</TableCell>
+                                        <TableCell>{applicant.contact_number}</TableCell>
+                                        <TableCell>{applicant.application_status}</TableCell>
                                         <TableCell>
-                                            <Tooltip title="Print personnel data form">
+                                            <Tooltip title="Download Personnel Data Form">
                                                 <IconButton
-                                                    onClick={handleClick.bind(null, user.id)}
+                                                    onClick={handleClick.bind(null, applicant.id)}
                                                 >
-                                                    <PrintIcon />
+                                                    <PictureAsPdfIcon />
                                                 </IconButton>
                                             </Tooltip>
                                         </TableCell>

@@ -148,23 +148,15 @@ export default function ApplicantForm({
                                 aria-controls={key}
                                 id={key}
                             >
-                                <Box
+                                <Typography
+                                    variant="h5"
                                     sx={{
-                                        display: "flex",
-                                        alignItems: "center",
+                                        mr: 1,
+                                        color: theme.palette.primary.main,
                                     }}
                                 >
-                                    <Typography
-                                        variant="h5"
-                                        sx={{
-                                            mr: 1,
-                                            color: theme.palette.primary.main,
-                                        }}
-                                    >
-                                        {label}
-                                    </Typography>
-                                    <em>(Put N/A if data is unavailable)</em>
-                                </Box>
+                                    {label}
+                                </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Component

@@ -13,31 +13,49 @@ const step = 2
 const label = 'Personal Data'
 
 const fields = labelsToFieldConfig([
-    'Contact Number',
-    'Email Address',
+    {
+        label: 'Contact Number',
+    },
+    {
+        key: 'email',
+        label: 'Email Address',
+    },
     {
         label: 'Date Of Birth',
         inputType: 'datepicker',
     },
-    'Place Of Birth',
-    'Height',
-    'Weight',
+    {
+        label: 'Place Of Birth',
+    },
+    {
+        key: 'height',
+        label: 'Height (Inches)',
+
+    },
+    {
+        key: 'weight',
+        label: 'Weight (Kilograms)',
+
+    },
     {
         key: 'gender',
         label: 'Gender',
         inputType: 'select',
         selectOptions: [
             {
-                value: 'male',
+                value: 'Male',
                 label: 'Male',
             },
             {
-                value: 'female',
+                value: 'Female',
                 label: 'Female',
             },
         ],
     },
-    'Religion',
+    {
+        label: 'Religion',
+        allowNA: true,
+    },
     {
         key: 'is_fully_vaccinated',
         label: 'Fully Vaccinated?',
@@ -110,9 +128,18 @@ const fields = labelsToFieldConfig([
             },
         ],
     },
-    'Hair Color',
-    'Driver License Number',
-    'Distinguishing Mark',
+    {
+        label: 'Hair Color',
+        allowNA: true,
+    },
+    {
+        label: 'Driver License Number',
+        allowNA: true,
+    },
+    {
+        label: 'Distinguishing Mark',
+        allowNA: true,
+    },
 ])
 
 function Component({
@@ -122,7 +149,7 @@ function Component({
     clearErrors
 }) {
     function handleOnChange(key, value) {
-        setData && setData(data => {
+        setData(data => {
             data[step][key] = value
             return data
         })
@@ -139,6 +166,8 @@ function Component({
                     const label = field.label
                     const inputType = field.inputType
                     const selectOptions = field.selectOptions || []
+                    const allowNA = field.allowNA
+                    
                     return (
                         <Grid
                             size={{
@@ -154,9 +183,10 @@ function Component({
                                 customValue={data?.[key] || ""}
                                 error={errors?.[key]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, key)}
+                                clearErrors={clearErrors?.bind(null, key)}
                                 helperText={errors?.[key] || ""}
                                 selectOptions={selectOptions}
+                                allowNA={allowNA}
                             />
                         </Grid>
                     )

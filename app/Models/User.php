@@ -5,6 +5,8 @@ namespace App\Models;
 use Carbon\Carbon;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -19,7 +21,6 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
         'first_name',
@@ -59,6 +60,11 @@ class User extends Authenticatable
         'hair_color',
         'driver_license_number',
         'distinguishing_mark',
+        'is_applicant',
+        'is_new',
+        'is_processing',
+        'is_rejected',
+        'is_hired',
     ];
 
     /**
@@ -71,8 +77,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $casts = [
-        'present_address' => 'array',
+    protected $casts = [];
+
+    protected $appends = [
+        'application_status',
     ];
 
     /**
@@ -107,12 +115,53 @@ class User extends Authenticatable
     public static function saveApplicationData($steps_data = [])
     {
         $data = collect($steps_data)->collapse()->all();
-        $data['name'] = "{$data['first_name']} {$data['middle_name']} {$data['last_name']}";
         $data['password'] = bcrypt('applicant2025');
 
         static::updateOrCreate(
             ['email' => $data['email_address']],
             $data
+        );
+    }
+
+    public function scopeApplicant(Builder $query): void
+    {
+        $query->where('is_applicant', 1);
+    }
+
+    public function scopeNew(Builder $query): void
+    {
+        $query->where('is_new', 1);
+    }
+
+    public function scopeProcessing(Builder $query): void
+    {
+        $query->where('is_processing', 1);
+    }
+
+    public function scopeRejected(Builder $query): void
+    {
+        $query->where('is_rejected', 1);
+    }
+
+    public function scopeHired(Builder $query): void
+    {
+        $query->where('is_hired', 1);
+    }
+
+    protected function applicationStatus(): Attribute
+    {
+        return new Attribute(
+            get: function() {
+                if ($this->is_new) {
+                    return 'New';
+                } else if ($this->is_processing) {
+                    return 'Processing';
+                } else if ($this->is_rejected) {
+                    return 'Rejected';
+                } else if ($this->is_hired) {
+                    return 'Hired';
+                }
+            }
         );
     }
 }

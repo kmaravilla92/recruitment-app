@@ -10,6 +10,10 @@ import {
 } from '@inertiajs/react'
 
 import {
+    useTheme,
+} from '@mui/material/styles'
+
+import {
     Grid2 as Grid,
     Stack,
     Typography
@@ -35,16 +39,22 @@ const label = 'Children Information'
 
 const rowFields = labelsToFieldConfig([
     'Full Name',
-    'Contact Number',
+    {
+        label: 'Contact Number',
+        allowNA: true,
+    },
     {
         key: 'birthday',
         label: 'Birthday (MM/DD/YYYY)',
         inputType: 'datepicker',
+        allowNA: true,
     },
 ])
 
+const maxRows = 3
+
 const defaultFormField = fieldsToFormObject(rowFields)
-const defaultFormFields = Array(1).fill(defaultFormField)
+const defaultFormFields = Array(maxRows).fill(defaultFormField)
 
 const fieldKey = 'child_detail_list'
 
@@ -76,6 +86,8 @@ function ChildRow({
     useEffect(() => {
         onChange(rowData)
     }, [rowData])
+
+    const theme = useTheme()
 
     function handleOnChange(key, value) {
         setData && setData(key, value)
@@ -110,6 +122,9 @@ function ChildRow({
             >
                 <Typography
                     variant="h6"
+                    sx={{
+                        color: theme.palette.primary.main,
+                    }}
                 >
                     Child {index + 1}
                 </Typography>
@@ -126,6 +141,7 @@ function ChildRow({
                     key,
                     label,
                     inputType,
+                    allowNA,
                 }) => {
                     const errorKey = `${index}.${key}`
                     return (
@@ -143,8 +159,9 @@ function ChildRow({
                                 customValue={data?.[key] || ""}
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, errorKey)}
+                                clearErrors={clearErrors?.bind(null, errorKey)}
                                 helperText={errors?.[errorKey] || ""}
+                                allowNA={allowNA}
                             />
                         </Grid>
                     )
@@ -189,6 +206,17 @@ function Component({
         })
     }
 
+    let addButton = null
+    if (rows.length < maxRows) {
+        addButton = (
+            <ButtonRow
+                onClick={handleClick} variant="text"
+            >
+                Add Child <AddIcon />
+            </ButtonRow>
+        )
+    }
+
     return (
         <>
             {rows.map((row, index) => {
@@ -204,11 +232,7 @@ function Component({
                     />
                 )
             })}
-            <ButtonRow
-                onClick={handleClick} variant="text"
-            >
-                Add Child <AddIcon />
-            </ButtonRow>
+            {addButton}
         </>
     )
 }

@@ -9,6 +9,10 @@ import {
 } from '@inertiajs/react'
 
 import {
+    useTheme,
+} from '@mui/material/styles'
+
+import {
     Grid2 as Grid,
     Typography
 } from '@mui/material'
@@ -30,12 +34,19 @@ const types = [
 ]
 
 const rowFields = labelsToFieldConfig([
-    'Full Name',
-    'Occupation',
+    {
+        label: 'Full Name',
+        allowNA: true,
+    },
+    {
+        label: 'Occupation',
+        allowNA: true,
+    },
     {
         key: 'birthday',
         label: 'Birthday (MM/DD/YYYY)',
         inputType: 'datepicker',
+        allowNA: true,
     }
 ])
 
@@ -75,6 +86,8 @@ const ParentRow = ({
         onChange(rowData)
     }, [rowData])
 
+    const theme = useTheme()
+
     function handleOnChange(key, value) {
         setData && setData(key, value)
     }
@@ -82,8 +95,11 @@ const ParentRow = ({
     return (
         <>
             <Typography
-                sx={{ mb: 2 }}
                 variant="h6"
+                sx={{
+                    mb: 2,
+                    color: theme.palette.primary.main,
+                }}
             >
                 {type}
             </Typography>
@@ -98,6 +114,7 @@ const ParentRow = ({
                     key,
                     label,
                     inputType,
+                    allowNA,
                 }) => {
                     const errorKey = `${typeKey}.${key}`
                     return (
@@ -115,8 +132,9 @@ const ParentRow = ({
                                 customValue={data?.[key] || ""}
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, errorKey)}
+                                clearErrors={clearErrors?.bind(null, errorKey)}
                                 helperText={errors?.[errorKey] || ""}
+                                allowNA={allowNA}
                             />
                         </Grid>
                     )

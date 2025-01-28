@@ -6,24 +6,26 @@ export function labelsToFieldConfig(labels) {
     return labels.map(labelEntry => {
         let key = ''
         let label = ''
-        let inputType = ''
+        let inputType = 'text'
         let selectOptions = []
+        let allowNA = false
         if (typeof labelEntry == 'object') {
             label = labelEntry?.label || ''
             key = labelEntry?.key || toSnakeCase(label)
-            inputType = labelEntry?.inputType || 'text'
-            selectOptions = labelEntry?.selectOptions || []
+            inputType = labelEntry?.inputType || inputType
+            selectOptions = labelEntry?.selectOptions || selectOptions
+            allowNA = labelEntry?.allowNA || allowNA
         } else {
             key = toSnakeCase(labelEntry)
             label = labelEntry
-            inputType = 'text'
         }
 
         return {
             key,
             label,
             inputType,
-            selectOptions
+            selectOptions,
+            allowNA,
         }
     })
 }

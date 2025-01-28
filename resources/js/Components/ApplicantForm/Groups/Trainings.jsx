@@ -10,6 +10,10 @@ import {
 } from '@inertiajs/react'
 
 import {
+    useTheme,
+} from '@mui/material/styles'
+
+import {
     Grid2 as Grid,
     Stack,
     Typography
@@ -44,8 +48,10 @@ const rowFields = labelsToFieldConfig([
     'Facilitator',
 ])
 
+const maxRows = 3
+
 const defaultFormField = fieldsToFormObject(rowFields)
-const defaultFormFields = Array(1).fill(defaultFormField)
+const defaultFormFields = Array(maxRows).fill(defaultFormField)
 
 const fieldKey = 'training_detail_list'
 
@@ -77,6 +83,8 @@ function TrainingRow({
     useEffect(() => {
         onChange(rowData)
     }, [rowData])
+
+    const theme = useTheme()
 
     function handleOnChange(key, value) {
         setData && setData(key, value)
@@ -111,6 +119,9 @@ function TrainingRow({
             >
                 <Typography
                     variant="h6"
+                    sx={{
+                        color: theme.palette.primary.main,
+                    }}
                 >
                     Training {index + 1}
                 </Typography>
@@ -142,7 +153,7 @@ function TrainingRow({
                                 customValue={data?.[key] || ""}
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, errorKey)}
+                                clearErrors={clearErrors?.bind(null, errorKey)}
                                 helperText={errors?.[errorKey] || ""}
                             />
                         </Grid>
@@ -187,6 +198,17 @@ function Component({
         })
     }
 
+    let addButton = null
+    if (rows.length < maxRows) {
+        addButton = (
+            <ButtonRow
+                onClick={handleClick} variant="text"
+            >
+                Add Training <AddIcon />
+            </ButtonRow>
+        )
+    }
+
     return (
         <>
             {rows.map((row, index) => {
@@ -202,11 +224,7 @@ function Component({
                     />
                 )
             })}
-            <ButtonRow
-                onClick={handleClick} variant="text"
-            >
-                Add Training <AddIcon />
-            </ButtonRow>
+            {addButton}
         </>
     )
 }

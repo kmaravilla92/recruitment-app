@@ -4,7 +4,7 @@ import {
 } from '@inertiajs/react'
 
 import {
-    Box,
+    Alert,
     Button,
     Checkbox,
     Container,
@@ -14,6 +14,10 @@ import {
     Stack,
     Typography,
 } from '@mui/material'
+
+import {
+    Error as ErrorIcon,
+} from '@mui/icons-material'
 
 import InputField from '@/Components/ApplicantForm/InputField'
 
@@ -40,7 +44,22 @@ export default function Welcome() {
     
     function handleOnChange(key, value) {
         setData(key, value)
-    } 
+    }
+
+    let errorAlert = null
+    if (errors?.xxx) {
+        errorAlert = (
+            <Alert
+                severity="error"
+                icon={<ErrorIcon fontSize="inherit" />}
+                sx={{
+                    mb: 4,
+                }}
+            >
+                Ooops! User account not found.
+            </Alert>
+        )
+    }
 
     return (
         <>
@@ -89,6 +108,7 @@ export default function Welcome() {
                     }}
                     onSubmit={handleSubmit}
                 >
+                    {errorAlert}
                     <Stack
                         spacing={2}
                     >
@@ -97,7 +117,7 @@ export default function Welcome() {
                             customValue={data?.email || ""}
                             error={errors?.email?.length > 0}
                             onChange={handleOnChange.bind(null, 'email')}
-                            onKeyUp={clearErrors?.bind(null, 'email')}
+                            clearErrors={clearErrors?.bind(null, 'email')}
                             helperText={errors?.email || ""}
                         />
                         <InputField
@@ -106,7 +126,7 @@ export default function Welcome() {
                             customValue={data?.password || ""}
                             error={errors?.password?.length > 0}
                             onChange={handleOnChange.bind(null, 'password')}
-                            onKeyUp={clearErrors?.bind(null, 'password')}
+                            clearErrors={clearErrors?.bind(null, 'password')}
                             helperText={errors?.password || ""}
                         />
                         <Stack

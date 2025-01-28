@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -34,7 +32,7 @@ return new class extends Migration
 
             // Personal Data
             $table->string('contact_number')->nullable();
-            $table->string('email_address')->nullable();
+            $table->string('email')->unique()->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('place_of_birth')->nullable();
             $table->string('height')->nullable();
@@ -87,6 +85,12 @@ return new class extends Migration
 
             // Character Reference List
             $table->json('character_reference_list')->nullable();
+
+            $table->boolean('is_applicant')->default(false);
+            $table->boolean('is_new')->default(false);
+            $table->boolean('is_processing')->default(false);
+            $table->boolean('is_rejected')->default(false);
+            $table->boolean('is_hired')->default(false);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

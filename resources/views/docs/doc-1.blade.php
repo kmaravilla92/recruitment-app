@@ -2066,7 +2066,7 @@
             </td>
             <td class="c72" colspan="5" rowspan="1">
                 <p class="c63"><span class="c6">EMAIL ADDRESS</span></p>
-                <p class="c0"><span class="c11">{{ $email_address }}</span></p>
+                <p class="c0"><span class="c11">{{ $email }}</span></p>
             </td>
         </tr>
         <tr class="c22">

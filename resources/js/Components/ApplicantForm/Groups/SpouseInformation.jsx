@@ -15,11 +15,15 @@ const label = 'Spouse Information'
 
 const rowFields = labelsToFieldConfig([
     'Full Name',
-    'Occupation',
+    {
+        label: 'Occupation',
+        allowNA: true,
+    },
     {
         key: 'birthday',
         label: 'Birthday (MM/DD/YYYY)',
         inputType: 'datepicker',
+        allowNA: true,
     },
 ])
 
@@ -57,6 +61,7 @@ function Component({
                     key,
                     label,
                     inputType,
+                    allowNA,
                 }) => {
                     const errorKey = `${fieldKey}.${key}`
                     return (
@@ -72,10 +77,11 @@ function Component({
                                 inputType={inputType}
                                 label={label}
                                 customValue={data?.[fieldKey]?.[key] || ""}
-                                error={errors?.[fieldKey]?.length > 0}
+                                error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, key)}
-                                helperText={errors?.[fieldKey] || ""}
+                                clearErrors={clearErrors?.bind(null, errorKey)}
+                                helperText={errors?.[errorKey] || ""}
+                                allowNA={allowNA}
                             />
                         </Grid>
                     );

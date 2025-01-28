@@ -9,6 +9,10 @@ import {
 } from '@inertiajs/react'
 
 import {
+    useTheme,
+} from '@mui/material/styles'
+
+import {
     Grid2 as Grid,
     Stack,
     Typography,
@@ -33,10 +37,22 @@ const types = [
 ]
 
 const rowFields = labelsToFieldConfig([
-    'Educational Status',
-    'School',
-    'Period Covered',
-    'Degree/Course',
+    {
+        label: 'Educational Status',
+        allowNA: true,
+    },
+    {
+        label: 'School',
+        allowNA: true,
+    },
+    {
+        label: 'Period Covered',
+        allowNA: true,
+    },
+    {
+        label: 'Degree/Course',
+        allowNA: true,
+    }
 ])
 
 const defaultFormFields = fieldsToFormObject(rowFields)
@@ -81,6 +97,8 @@ const TypeRow = ({
         onChange(typeKey, rowData)
     }, [rowData])
 
+    const theme = useTheme()
+
     function handleOnChange(key, value) {
         setData && setData(key, value)
     }
@@ -89,7 +107,7 @@ const TypeRow = ({
         <>
             <Typography
                 sx={{
-                    mb: 1,
+                    color: theme.palette.primary.main,
                 }}
                 variant="h6"
             >
@@ -104,7 +122,8 @@ const TypeRow = ({
             >
                 {rowFields.map(({
                     key,
-                    label
+                    label,
+                    allowNA,
                 }) => {
                     const errorKey = `${typeKey}.${key}`;
                     return (
@@ -121,8 +140,9 @@ const TypeRow = ({
                                 customValue={data?.[typeKey]?.[key] || ""}
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, errorKey)}
+                                clearErrors={clearErrors?.bind(null, errorKey)}
                                 helperText={errors?.[errorKey] || ""}
+                                allowNA={allowNA}
                             />
                         </Grid>
                     )

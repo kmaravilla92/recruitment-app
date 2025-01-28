@@ -30,7 +30,7 @@ class SignInRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'required' => 'This field is required.',
+            'required' => 'Please enter a value.',
             'email' => 'Please enter a valid email address.',
         ];
     }

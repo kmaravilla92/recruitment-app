@@ -108,7 +108,7 @@ class StoreApplicationRequest extends FormRequest
             // Personal Data
             2 => [
                 'contact_number',
-                'email_address',
+                'email',
                 'date_of_birth',
                 'place_of_birth',
                 'height',
@@ -215,7 +215,8 @@ class StoreApplicationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'required' => 'This field is required.',
+            'required' => 'Please enter a value.',
+            'email' => 'Please enter a valid email address.'
         ];
     }
 

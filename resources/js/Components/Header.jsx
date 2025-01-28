@@ -1,53 +1,66 @@
 import {
+    Link,
+    usePage
+} from '@inertiajs/react'
+
+import {
     AppBar,
-    Box,
-    Container,
     Stack,
     Toolbar,
     Typography,
-    IconButton
+    IconButton,
 } from "@mui/material"
-import MenuIcon from "@mui/icons-material/Menu"
+import {
+    AccountCircle as AccountCircleIcon
+} from "@mui/icons-material"
 
 import appLogoSrc from "../../img/app-logo.png"
 
 export default function Header() {
+    const {
+        auth
+    } = usePage().props
+
     return (
         <AppBar
-            position="sticky"
+            position="fixed"
             sx={{
                 zIndex: (theme) => theme.zIndex.drawer + 1
             }}
         >
-            <Toolbar
-                disableGutters
-            >
-                <Container
-                    maxWidth="xl"
+            <Toolbar>
+                <Stack
+                    direction="row"
+                    spacing={2}
+                    sx={{
+                        width: "100%",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        py: 1,
+                    }}
                 >
                     <Stack
                         direction="row"
                         spacing={2}
                         sx={{
-                            width: "100%",
                             alignItems: "center",
                             justifyContent: "space-between",
-                            py: 2,
                         }}
                     >
-                        <Stack
-                            direction="row"
-                            spacing={2}
-                            sx={{
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                            }}
-                        >
+                        <Link href="/">
                             <img
                                 src={appLogoSrc}
                                 width="50"
                                 height="50"
                             />
+                        </Link>
+                        <Link
+                            href="/"
+                            style={{
+                                color: "#fff",
+                                textDecoration: "none",
+                            }}
+                        >
                             <Typography
                                 variant="h6"
                                 component="div"
@@ -57,7 +70,13 @@ export default function Header() {
                             >
                                 Shared Services
                             </Typography>
-                        </Stack>
+                        </Link>
+                    </Stack>
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                    >
+                        <p>{`Hello ${auth.user.first_name}`}</p>
                         <IconButton
                             size="large"
                             edge="start"
@@ -67,10 +86,11 @@ export default function Header() {
                                 p: 0,
                             }}
                         >
-                            <MenuIcon />
+                            
+                            <AccountCircleIcon />
                         </IconButton>
                     </Stack>
-                </Container>
+                </Stack>
             </Toolbar>
         </AppBar>
     )

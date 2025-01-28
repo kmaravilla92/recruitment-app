@@ -10,6 +10,10 @@ import {
 } from '@inertiajs/react'
 
 import {
+    useTheme,
+} from '@mui/material/styles'
+
+import {
     Grid2 as Grid,
     Stack,
     Typography
@@ -35,13 +39,21 @@ const label = 'Character References'
 
 const rowFields = labelsToFieldConfig([
     'Full Name',
-    'Occupation',
-    'Company',
+    {
+        label: 'Occupation',
+        allowNA: true,
+    },
+    {
+        label: 'Company',
+        allowNA: true,
+    },
     'Contact Number',
 ])
 
+const maxRows = 3
+
 const defaultFormField = fieldsToFormObject(rowFields)
-const defaultFormFields = Array(1).fill(defaultFormField)
+const defaultFormFields = Array(maxRows).fill(defaultFormField)
 
 const fieldKey = 'character_reference_list'
 
@@ -73,6 +85,8 @@ function CharacterReferenceRow({
     useEffect(() => {
         onChange(rowData)
     }, [rowData])
+
+    const theme = useTheme()
 
     function handleInputChange(key, value) {
         setData && setData(key, value)
@@ -107,6 +121,9 @@ function CharacterReferenceRow({
             >
                 <Typography
                     variant="h6"
+                    sx={{
+                        color: theme.palette.primary.main,
+                    }}
                 >
                     Character Reference {index + 1}
                 </Typography>
@@ -121,7 +138,8 @@ function CharacterReferenceRow({
             >
                 {rowFields.map(({
                     key,
-                    label
+                    label,
+                    allowNA,
                 }) => {
                     const errorKey = `${index}.${key}`
                     return (
@@ -138,8 +156,9 @@ function CharacterReferenceRow({
                                 customValue={data?.[key] || ""}
                                 error={errors?.[errorKey]?.length > 0}
                                 onChange={handleInputChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, errorKey)}
+                                clearErrors={clearErrors?.bind(null, errorKey)}
                                 helperText={errors?.[errorKey] || ""}
+                                allowNA={allowNA}
                             />
                         </Grid>
                     )
@@ -183,6 +202,18 @@ function Component({
         })
     }
 
+    let addButton = null
+    if (rows.length < maxRows) {
+        addButton = (
+            <ButtonRow
+                variant="text"
+                onClick={handleAddClick}
+            >
+                Add Character Reference <AddIcon />
+            </ButtonRow>
+        )
+    }
+
     return (
         <>
             {rows.map((row, index) => {
@@ -198,12 +229,7 @@ function Component({
                     />
                 )
             })}
-            <ButtonRow
-                onClick={handleAddClick}
-                variant="text"
-            >
-                Add Character Reference <AddIcon />
-            </ButtonRow>
+           {addButton} 
         </>
     )
 }

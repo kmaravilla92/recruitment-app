@@ -14,11 +14,20 @@ const step = 6
 const label = 'Uniform Detail'
 
 const rowFields = labelsToFieldConfig([
-    'Shoe Size',
-    'Waistline',
+    {
+        key: 'shoe_size',
+        label: 'Shoe Size (Inches)',
+    },
+    {
+        key: 'waistline',
+        label: 'Waistline (Inches)',
+    },
     'Polo Shirt Size',
     'Pershing Cap Size',
-    'Type A Uniform Size',
+    {
+        key: 'type_a_uniform_size',
+        label: 'Type A Uniform Size (Ready to wear)',
+    },
 ])
 
 const defaultFormFields = fieldsToFormObject(rowFields)
@@ -67,7 +76,7 @@ function Component({
                                 customValue={data?.[fieldKey]?.[key] || ""}
                                 error={errors?.[key]?.length  > 0}
                                 onChange={handleOnChange.bind(null, key)}
-                                onKeyUp={clearErrors?.bind(null, key)}
+                                clearErrors={clearErrors?.bind(null, key)}
                                 helperText={errors?.[key] || ""}
                             />
                         </Grid>
